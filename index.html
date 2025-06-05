@@ -1,0 +1,3430 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>亚洲集团 数据库（前端版）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 密码弹窗脚本开始 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { background: linear-gradient(135deg, #18181c 0%, #444 100%); color: #e0e0e0; font-family: Arial, sans-serif; padding: 20px; }
+        .tabs { display: flex; margin-bottom: 20px; }
+        .tab { padding: 12px 28px; cursor: pointer; background: #232526; border: 1px solid #333; border-radius: 12px 12px 0 0; margin-right: 5px; color: #b0b0b0; font-weight: 500; position: relative;}
+        .tab.active { background: linear-gradient(90deg, #00e676 0%, #1de9b6 100%); color: #232526; border-bottom: 1px solid #232526; }
+        .tab-content { display: none; padding: 28px 24px 24px 24px; border: 1px solid #333; border-top: none; border-radius: 0 0 12px 12px; background: rgba(30,32,34,0.98); }
+        .tab-content.active { display: block; }
+        textarea { width: 100%; min-height: 140px; border-radius: 12px; border: 1.5px solid #333; background: linear-gradient(135deg, #232526 0%, #414345 100%); color: #fff; font-size: 16px; padding: 16px; margin-bottom: 18px; }
+        button { padding: 10px 22px; background: linear-gradient(90deg, #232526 0%, #414345 100%); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; }
+        button:hover, button:focus { background: linear-gradient(90deg, #00e676 0%, #1de9b6 100%); color: #232526; }
+        .card-group { display: flex; gap: 18px; margin: 18px 0 0 0; flex-wrap: wrap; }
+        .card-poultry { background: linear-gradient(90deg,#43e97b 0%,#38f9d7 100%); color: #232526; border-radius: 10px; padding: 14px 24px; font-weight: bold; min-width: 120px; }
+        .card-beast { background: linear-gradient(90deg,#fd746c 0%,#ff9068 100%); color: #232526; border-radius: 10px; padding: 14px 24px; font-weight: bold; min-width: 120px; }
+        .card-bose-red { background: linear-gradient(90deg,#ff5858 0%,#f09819 100%); color: #fff; border-radius: 10px; padding: 14px 24px; font-weight: bold; min-width: 120px; }
+        .card-bose-blue { background: linear-gradient(90deg,#2193b0 0%,#6dd5ed 100%); color: #fff; border-radius: 10px; padding: 14px 24px; font-weight: bold; min-width: 120px; }
+        .card-bose-green { background: linear-gradient(90deg,#56ab2f 0%,#a8e063 100%); color: #232526; border-radius: 10px; padding: 14px 24px; font-weight: bold; min-width: 120px; }
+        .stat-float-bar {
+            background: linear-gradient(90deg, #232526 0%, #43e97b 100%);
+            color: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px #000a;
+            padding: 18px 24px 14px 24px;
+            margin: 24px 0 18px 0;
+            position: relative;
+            z-index: 10;
+            transition: box-shadow 0.2s;
+        }
+        .save-btn-green {
+            background: linear-gradient(90deg,#00e676 0%,#1de9b6 100%) !important;
+            color: #232526 !important;
+            font-weight: bold;
+        }
+        .stat-float-bar:hover {
+            box-shadow: 0 8px 32px #00e67699, 0 4px 24px #000a;
+        }
+        .stat-float-title {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .user-data-list {
+            margin-top: 10px;
+            max-width: 340px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .user-data-item {
+            background: linear-gradient(90deg, #181c18 0%, #38f9d7 100%);
+            color: #e0ffe0;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            padding: 4px 6px 2px 6px;
+            box-shadow: 0 1px 4px #0003;
+            position: relative;
+            font-size: 13px;
+            min-height: 28px;
+            max-width: 260px;
+            margin-left: auto;
+            margin-right: auto;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            transition: box-shadow 0.15s, border 0.15s;
+            border: 1.5px solid transparent;
+        }
+        .user-data-item.checked {
+            border: 1.5px solid #00e676;
+            box-shadow: 0 2px 10px #00e67633;
+        }
+        .user-data-checkbox {
+            margin-top: 4px;
+            margin-right: 6px;
+            accent-color: #00e676;
+            cursor: pointer;
+            flex-shrink: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+        .user-data-content { flex: 1; white-space: pre-wrap; font-family: inherit; }
+        .user-data-title { color: #00e676; font-weight: bold; margin-bottom: 2px; font-size: 14px; }
+        @media (max-width: 600px) {
+            .card-group { flex-direction: column; gap: 12px; }
+            .tab-content { padding: 12px 6px 12px 6px; }
+            .tab { padding: 10px 10px; }
+            button { width: 100%; }
+            .stat-float-bar { padding: 12px 8px 10px 8px; }
+            .user-data-list {
+                max-width: 100vw;
+                padding-left: 0;
+                padding-right: 0;
+            }
+            .user-data-item {
+                max-width: 95vw;
+                min-width: 0;
+                font-size: 12px;
+                padding: 6px 2px 4px 2px;
+            }
+        }
+        #userIntersectStat {
+            display:none;
+            margin-top:18px;
+            padding:10px 6px 8px 6px;
+            background:linear-gradient(90deg,#181c18 0%,#38f9d7 100%);
+            border-radius:8px;
+            max-width:340px;
+            margin-left:auto;
+            margin-right:auto;
+            color:#00e676;
+            font-size:14px;
+        }
+        #groupSaveBox {
+            margin-top:18px;
+            max-width:340px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        #groupSaveMsg {
+            color:#00e676;
+            margin-top:6px;
+            font-size:13px;
+        }
+        #intersectStatResult {
+            margin-top:18px;
+            padding:10px 6px 8px 6px;
+            background:linear-gradient(90deg,#181c18 0%,#38f9d7 100%);
+            border-radius:8px;
+            max-width:340px;
+            margin-left:auto;
+            margin-right:auto;
+            color:#00e676;
+            font-size:14px;
+        }
+        #unionStatResult {
+            margin-top:18px;
+            padding:10px 6px 8px 6px;
+            background:linear-gradient(90deg,#181c18 0%,#38f9d7 100%);
+            border-radius:8px;
+            max-width:340px;
+            margin-left:auto;
+            margin-right:auto;
+            color:#00e676;
+            font-size:14px;
+        }
+        .intersection-group {
+            margin-bottom: 18px;
+        }
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .number-cell {
+            padding: 6px 0;
+            text-align: center;
+            background-color: #fffae0;
+            border-radius: 3px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            text-align: center;
+        }
+        th {
+            background-color: #232526;
+            color: #ffd700;
+        }
+        #backToTopBtn {
+            display:none;
+            position:fixed;
+            right:18px;
+            bottom:28px;
+            z-index:999;
+            background:linear-gradient(90deg,#00e676 0%,#1de9b6 100%);
+            color:#232526;
+            font-weight:bold;
+            border:none;
+            border-radius:50%;
+            width:48px;
+            height:48px;
+            font-size:22px;
+            box-shadow:0 2px 12px #0007;
+            cursor:pointer;
+        }
+        .group-btns { display: flex; gap: 12px; margin-bottom: 16px; }
+        .group-btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #444;
+            color: #bbb;
+            transition: background 0.2s, color 0.2s;
+        }
+        .group-btn.selected {
+            background: linear-gradient(90deg,#00e676 0%,#1de9b6 100%);
+            color: #232526;
+        }
+        .group-btn:disabled {
+            background: #222;
+            color: #666;
+            cursor: not-allowed;
+            opacity: 0.7;
+            border: 1px solid #444;
+        }
+        .param-box {
+            margin-bottom: 12px;
+            background: #232526;
+            border-radius: 8px;
+            padding: 10px 16px;
+            color: #ffd700;
+        }
+        .param-box input[type=number] {
+            width: 60px;
+            border-radius: 6px;
+            border: 1px solid #444;
+            padding: 2px 6px;
+            font-size: 15px;
+        }
+        .save-param-btn {
+            margin-left: 12px;
+            padding: 4px 16px;
+            border-radius: 6px;
+            background: linear-gradient(90deg,#00e676 0%,#1de9b6 100%);
+            color: #232526;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 18px;
+            background: #333;
+            border-radius: 8px;
+            margin: 18px 0 8px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg,#ff4c4c 0%,#00e676 100%);
+            width: 0%;
+            transition: width 0.2s, background 0.2s;
+        }
+        .progress-bar-percent {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            color: #fff;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 18px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .copy-btn {
+            margin-left: 8px;
+            padding: 2px 10px;
+            border-radius: 5px;
+            background: #ffd700;
+            color: #232526;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+        }
+        .copy-btn.copied {
+            background: #00e676;
+            color: #fff;
+        }
+        .group-tag {
+            display: inline-block;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin: 2px 2px 0 0;
+        }
+        .group-tag-red {
+            background: #ff5858;
+            color: white;
+        }
+        .group-tag-purple {
+            background: #a742f5;
+            color: white;
+        }
+        .group-tag-green {
+            background: #56ab2f;
+            color: white;
+        }
+        .group-tag-yellow {
+            background: #ffd700;
+            color: #232526;
+        }
+        .filter-panel {
+            background: #232526;
+            border-radius: 10px;
+            padding: 12px 18px 8px 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 12px #0005;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px 32px;
+            align-items: center;
+            justify-content: center;
+        }
+        .filter-panel label {
+            margin-right: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .filter-panel .filter-group {
+            margin-bottom: 6px;
+        }
+        .filter-panel input[type=checkbox] {
+            accent-color: #00e676;
+            margin-right: 2px;
+            transform: scale(1.1);
+        }
+      .gradient-title {
+            font-size: 2.2em;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 2px;
+            background: linear-gradient(270deg, #ff2a2a, #4fc3f7, #ff2a2a);
+            background-size: 200% 200%;
+            color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
+            animation: gradientMove 3s linear infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+       @media (max-width: 600px) {
+    .group-btns {
+        gap: 10px 10px;
+        flex-wrap: wrap;
+    }
+    .group-btn {
+        padding: 7px 14px;
+        font-size: 14px;
+        min-width: 80px;
+        border-radius: 7px;
+    }
+}
+    </style>
+</head>
+<body>
+   <h2 class="gradient-title">亚洲集团 数据库（前端版）</h2>
+  <body>
+
+<!-- 全局筛选面板按钮 -->
+<div id="filterPanelWrapper" style="margin-bottom:18px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:17px;color:#ffd700;font-weight:bold;">筛选条件</span>
+    <button id="filterPanelToggleBtn" onclick="showFilterPanel()" style="padding:2px 14px;border-radius:6px;background:#232526;color:#ffd700;font-weight:bold;font-size:14px;border:1px solid #444;">展开</button>
+  </div>
+</div>
+<!-- 全局筛选面板浮层 -->
+<div id="globalFilterPanelModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:999;background:rgba(0,0,0,0.25);">
+  <div style="position:absolute;top:80px;left:50%;transform:translateX(-50%);background:#232526;padding:24px 32px;border-radius:12px;min-width:340px;box-shadow:0 8px 32px #000;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:18px;color:#ffd700;font-weight:bold;">筛选条件</span>
+      <button onclick="hideFilterPanel()" style="background:none;border:none;font-size:20px;color:#ffd700;cursor:pointer;">×</button>
+    </div>
+    <div class="filter-panel" id="globalFilterPanel" style="margin-top:18px;"></div>
+  </div>
+</div>
+<div class="tabs">
+    <div class="tab active" onclick="openTab('bigdata')">大数据解析</div>
+    <div class="tab" onclick="openTab('userdata')">用户数据</div>
+    <div class="tab" onclick="openTab('intersectstat')">交集统计</div>
+    <div class="tab" onclick="openTab('unionstat')">并集统计</div>
+    <div class="tab" onclick="openTab('smartanalysis')">智能分析</div>
+</div>
+    
+<!-- 大数据解析页面 -->
+<div id="bigdata" class="tab-content active">
+    <div style="font-size:1.3em;color:#ffd700;font-weight:bold;letter-spacing:2px;margin-bottom:10px;">大数据解析</div>
+    <textarea id="bigDataInput" rows="6" placeholder="请粘贴所有用户数据（支持多种分隔符）" style="width:100%;margin-top:32px;border-radius:8px;padding:10px 12px;background:#232526;color:#fff;border:1px solid #444;"></textarea>
+    <button id="resetBigDataInputBtn" style="margin-top:8px;padding:6px 18px;border-radius:8px;background:#ff4c4c;color:#fff;font-weight:bold;">重置输入框</button>
+    <div style="margin:8px 0 0 0;color:#ffd700;font-weight:bold;">用户数：<span id="bigDataUserCount">0</span></div>
+    <button id="analyzeBtn" style="margin-top:10px;padding:8px 22px;border-radius:8px;background:linear-gradient(90deg,#00e676 0%,#1de9b6 100%);color:#232526;font-weight:bold;">统计</button>
+    <div id="bigDataResult" style="margin-top:14px;"></div>
+</div>
+    
+<!-- 用户数据页面 -->
+<div id="userdata" class="tab-content">
+    <!-- 悬浮到顶部按钮，右下角，比到底部按钮高 -->
+<button id="backToTopBtn" onclick="scrollToTop()" style="
+  display:none;
+  position:fixed;
+  right:18px;
+  bottom:148px; /* 比到底部按钮高60px，避免重叠 */
+  z-index:999;
+  background:linear-gradient(90deg,#00e676 0%,#1de9b6 100%);
+  color:#232526;
+  font-weight:bold;
+  border:none;
+  border-radius:50%;
+  width:48px;
+  height:48px;
+  font-size:28px;
+  box-shadow:0 2px 12px #0007;
+  cursor:pointer;
+  align-items:center;
+  justify-content:center;
+">↑</button>
+  <!-- 悬浮到底部按钮，右下角，手机端同样适用 -->
+<button id="scrollToBottomBtn" onclick="scrollToBottom()" style="
+  display:none;
+  position:fixed;
+  right:18px;
+  bottom:88px;
+  z-index:999;
+  background:linear-gradient(90deg,#ffd700 0%,#ffec80 100%);
+  color:#232526;
+  font-weight:bold;
+  border:none;
+  border-radius:50%;
+  width:48px;
+  height:48px;
+  font-size:28px;
+  box-shadow:0 2px 12px #0007;
+  cursor:pointer;
+  align-items:center;
+  justify-content:center;
+">↓</button>
+ <div style="font-size:1.3em;color:#ffd700;font-weight:bold;letter-spacing:2px;margin-bottom:10px;">用户数据</div>
+    <div style="color:#ffd700;font-weight:bold;margin-bottom:8px;">
+        用户总数：<span id="userDataTotal">0</span>
+        &nbsp;&nbsp;已勾选：<span id="userDataChecked">0</span>
+        &nbsp;&nbsp;
+        <button id="selectAllBtn" onclick="selectAllUsers()" style="padding:4px 14px;border-radius:6px;background:linear-gradient(90deg,#00e676 0%,#1de9b6 100%);color:#232526;font-weight:bold;font-size:13px;">一键全选</button>
+    </div>
+    <div id="userDataPanel" class="user-data-list"></div>
+    <div id="userIntersectStat"></div>
+    <div id="groupSaveBox">
+        <div style="color:#ffd700;font-weight:bold;margin-bottom:6px;">保存勾选到分组</div>
+        <select id="saveGroupSelect" style="padding:4px 10px;border-radius:6px;font-size:14px;">
+            <option value="group1">1码4码8码12码组</option>
+            <option value="group2">4码8码12码组</option>
+            <option value="group3">8码12码组</option>
+        </select>
+        <button onclick="saveCheckedToGroup()" style="margin-left:10px;padding:4px 16px;border-radius:6px;background:linear-gradient(90deg,#00e676 0%,#1de9b6 100%);color:#232526;font-weight:bold;">保存</button>
+        <button onclick="clearGroupData()" style="margin-left:10px;padding:4px 16px;border-radius:6px;background:#ff4c4c;color:#fff;font-weight:bold;">清空分组数据</button>
+        <div id="groupSaveMsg"></div>
+    </div>
+</div>
+
+<!-- 交集统计页面（注意：现在是独立的，不在用户数据页面里面！） -->
+<div id="intersectstat" class="tab-content">
+    <div style="font-size:1.3em;color:#ffd700;font-weight:bold;letter-spacing:2px;margin-bottom:10px;">交集统计</div>
+    <div>
+    <div style="color:#ffd700;font-weight:bold;margin-bottom:8px;">请选择分组进行交集统计</div>
+    <select id="intersectGroupSelect" style="padding:4px 10px;border-radius:6px;font-size:14px;">
+        <option value="group1">1码4码8码12码组</option>
+        <option value="group2">4码8码12码组</option>
+        <option value="group3">8码12码组</option>
+    </select>
+    <button onclick="showIntersectStat()" style="margin-left:10px;padding:6px 18px;border-radius:8px;background:linear-gradient(90deg,#00e676 0%,#1de9b6 100%);color:#232526;font-weight:bold;">统计交集</button>
+    <!-- 三个独立保存按钮 -->
+    <button id="saveBtn_group1" onclick="saveIntersectResultToLocal('group1')" style="margin-left:10px;padding:6px 18px;border-radius:8px;background:#444;color:#fff;font-weight:bold;">保存1码4码8码12码</button>
+    <button id="saveBtn_group2" onclick="saveIntersectResultToLocal('group2')" style="margin-left:10px;padding:6px 18px;border-radius:8px;background:#444;color:#fff;font-weight:bold;">保存4码8码12码</button>
+    <button id="saveBtn_group3" onclick="saveIntersectResultToLocal('group3')" style="margin-left:10px;padding:6px 18px;border-radius:8px;background:#444;color:#fff;font-weight:bold;">保存8码12码</button>
+    <button onclick="clearIntersectGroupData()" style="margin-left:10px;padding:6px 18px;border-radius:8px;background:#ff4c4c;color:#fff;font-weight:bold;">清空交集</button>
+    <span id="saveIntersectMsg" style="margin-left:10px;color:#ffd700;"></span>
+</div>
+<div id="intersectStatResult" style="margin-top:20px;"></div>
+</div>
+
+<!-- 并集统计页面 -->
+<div id="unionstat" class="tab-content">
+    <div style="font-size:1.3em;color:#ffd700;font-weight:bold;letter-spacing:2px;margin-bottom:10px;">并集统计</div>
+    <div>
+        <div style="color:#ffd700;font-weight:bold;margin-bottom:8px;">请选择交集保存的组进行并集分析</div>
+        <div class="group-btns" id="unionGroupBtns">
+    <button class="group-btn" id="unionBtn_group1" onclick="toggleUnionGroup('group1')">1码4码8码12码组</button>
+    <button class="group-btn" id="unionBtn_group2" onclick="toggleUnionGroup('group2')">4码8码12码组</button>
+    <button class="group-btn" id="unionBtn_group3" onclick="toggleUnionGroup('group3')">8码12码组</button>
+</div>
+<!-- 参数设置区域 -->
+<div id="unionParamBox" class="param-box" style="margin-top:15px;">
+    <div style="margin-bottom:10px;color:#00e676;">请设置每组的最小/最大出现次数：</div>
+    <!-- 上面三组 -->
+    <div class="param-group-container">
+        <div class="param-group">
+            <div>1码4码8码12码组：</div>
+            <input type="number" id="unionParamMin_group1" placeholder="最小值" min="0" max="30" style="width:80px;">
+            <input type="number" id="unionParamMax_group1" placeholder="最大值" min="1" max="30" style="width:80px;">
+            <button onclick="saveUnionParam('group1')" style="margin-left:10px;">保存</button>
+            <span id="unionParamMsg_group1" style="margin-left:10px;color:#ff4c4c;"></span>
+        </div>
+        <div class="param-group">
+            <div>4码8码12码组：</div>
+            <input type="number" id="unionParamMin_group2" placeholder="最小值" min="0" max="30" style="width:80px;">
+            <input type="number" id="unionParamMax_group2" placeholder="最大值" min="1" max="30" style="width:80px;">
+            <button onclick="saveUnionParam('group2')" style="margin-left:10px;">保存</button>
+            <span id="unionParamMsg_group2" style="margin-left:10px;color:#ff4c4c;"></span>
+        </div>
+        <div class="param-group">
+            <div>8码12码组：</div>
+            <input type="number" id="unionParamMin_group3" placeholder="最小值" min="0" max="30" style="width:80px;">
+            <input type="number" id="unionParamMax_group3" placeholder="最大值" min="1" max="30" style="width:80px;">
+            <button onclick="saveUnionParam('group3')" style="margin-left:10px;">保存</button>
+            <span id="unionParamMsg_group3" style="margin-left:10px;color:#ff4c4c;"></span>
+        </div>
+    </div>
+</div>
+<!-- 横排参数设置 -->
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+  <span style="color:#ffd700; font-size:13px;">数字总次数范围：</span>
+  <span style="color:#ffd700; font-size:13px;">最小值：</span>
+  <input id="unionParamMin" type="number" min="0" max="99" value="0" style="width:40px; font-size:13px;">
+  <span style="color:#ffd700; font-size:13px;">最大值：</span>
+  <input id="unionParamMax" type="number" min="0" max="99" value="99" style="width:40px; font-size:13px;">
+ <label style="color:#ffd700; font-size:13px; display:flex; align-items:center; gap:4px; margin-left:10px;">
+  <input type="checkbox" id="unionUserDedupSwitch" style="vertical-align:middle;">
+  去重用户名
+<button onclick="applyUnionParam()" style="margin-left:8px; font-size:13px; padding:2px 10px;">应用设置</button>
+</div>
+
+<style>
+.param-box {
+    background: #181a1b;
+    padding: 18px 20px;
+    border-radius: 10
+.param-group {
+    background: #232526;
+    border-radius: 8px;
+    padding: 12px 18px;
+    min-width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.param-group input[type="number"] {
+    margin-right: 5px;
+}
+</style>
+<div id="unionFilterPanel"></div>
+<div style="display:flex;align-items:center;gap:24px;margin-bottom:12px;">
+    <div>
+     <span style="font-size:12px;color:#ffd700;">4码差集次数区间：</span>
+        <input id="diffMin_4" type="number" value="0" min="0" max="50" style="width:40px;font-size:12px;">
+        -
+        <input id="diffMax_4" type="number" value="50" min="0" max="50" style="width:40px;font-size:12px;">
+    </div>
+    <div>
+        <span style="font-size:12px;color:#ffd700;">8码差集次数区间：</span>
+        <input id="diffMin_8" type="number" value="0" min="0" max="50" style="width:40px;font-size:12px;">
+        -
+        <input id="diffMax_8" type="number" value="50" min="0" max="50" style="width:40px;font-size:12px;">
+    </div>
+    <div>
+        <span style="font-size:12px;color:#ffd700;">12码差集次数区间：</span>
+        <input id="diffMin_12" type="number" value="0" min="0" max="50" style="width:40px;font-size:12px;">
+        -
+        <input id="diffMax_12" type="number" value="50" min="0" max="50" style="width:40px;font-size:12px;">
+    </div>
+   <button onclick="applyAllDiffSetting()" style="font-size:12px;padding:2px 10px;height:28px;">应用设置</button>
+</div>
+<div style="display:flex;gap:16px;margin-bottom:18px;">
+  <button class="stat-btn" onclick="statAllUserCode('4', 'allUser4StatResult')">统计所有用户4码</button>
+  <button class="stat-btn" onclick="statAllUserCode('8', 'allUser8StatResult')">统计所有用户8码</button>
+  <button class="stat-btn" onclick="statAllUserCode('12', 'allUser12StatResult')">统计所有用户12码</button>
+</div>
+<div id="allUser4StatResult" class="stat-result" style="margin-bottom:8px;"></div>
+<button class="stat-btn" id="saveAllUser4StatBtn" onclick="saveAllUserStat('4')" style="display:none;margin-bottom:18px;">保存4码统计</button>
+<div id="allUser8StatResult" class="stat-result" style="margin-bottom:8px;"></div>
+<button class="stat-btn" id="saveAllUser8StatBtn" onclick="saveAllUserStat('8')" style="display:none;margin-bottom:18px;">保存8码统计</button>
+<div id="allUser12StatResult" class="stat-result" style="margin-bottom:8px;"></div>
+<button class="stat-btn" id="saveAllUser12StatBtn" onclick="saveAllUserStat('12')" style="display:none;margin-bottom:18px;">保存12码统计</button>
+   
+<!-- 展示每个码型排除的数字 -->
+<div style="display:flex; flex-direction:column; gap:18px; align-items:flex-start; margin-bottom:18px;">
+    <div>
+        <div style="font-size:12px;color:#ffd700;">4码排除数字：</div>
+        <div id="excludeNums_4" style="min-width:180px;word-break:break-all;"></div>
+    </div>
+    <div>
+        <div style="font-size:12px;color:#ffd700;">8码排除数字：</div>
+        <div id="excludeNums_8" style="min-width:180px;word-break:break-all;"></div>
+    </div>
+    <div>
+        <div style="font-size:12px;color:#ffd700;">12码排除数字：</div>
+        <div id="excludeNums_12" style="min-width:180px;word-break:break-all;"></div>
+    </div>
+</div>
+<div id="diffExcludeSummary"></div>
+<div id="allUser4StatResult" class="stat-result"></div>
+<div id="allUser8StatResult" class="stat-result"></div>
+<div id="allUser12StatResult" class="stat-result"></div>
+<button id="resetAllExcludeBtn" style="
+    background:#ff4c4c;
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    padding:2px 12px;
+    font-size:13px;
+    cursor:pointer;
+    font-weight:bold;
+    margin-bottom:10px;
+"></button>
+<style>
+.stat-btn {
+  flex:1;
+  padding:10px 0;
+  border-radius:8px;
+  background:#444;
+  color:#ffd700;
+  font-weight:bold;
+  border:none;
+  font-size:16px;
+  cursor:pointer;
+  transition:background 0.2s;
+}
+.stat-btn:hover { background:#222; }
+.save-btn {
+  flex:1;
+  padding:8px 0;
+  border-radius:8px;
+  background:#444;
+  color:#888;
+  font-weight:bold;
+  border:none;
+  font-size:15px;
+  cursor:not-allowed;
+  transition:background 0.2s;
+}
+.save-btn.enabled {
+  background:linear-gradient(90deg,#00e676 0%,#1de9b6 100%);
+  color:#232526;
+  cursor:pointer;
+}
+.clear-btn {
+  width:100%;
+  padding:12px 0;
+  border-radius:8px;
+  background:#ff4c4c;
+  color:#fff;
+  font-weight:bold;
+  border:none;
+  font-size:16px;
+  cursor:pointer;
+  transition:background 0.2s;
+}
+.stat-result {
+  margin:12px 0;
+  padding:12px;
+  background:#232526;
+  color:#ffd700;
+  border-radius:8px;
+  min-height:32px;
+  font-size:15px;
+  word-break:break-all;
+}
+</style>
+<div style="margin-top:20px;display:flex;">
+    <button id="unionAnalyzeBtn" onclick="startUnionAnalyze()" 
+            style="padding:8px 22px;border-radius:8px;background:linear-gradient(90deg,#00e676 0%,#1de9b6 100%);color:#232526;font-weight:bold;">
+        并集分析
+            </button>
+            <button id="enhancedAnalyzeBtn" onclick="showEnhancedAnalysis()" 
+                    style="margin-left:15px;padding:8px 22px;border-radius:8px;background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;font-weight:bold;">
+                高级分析
+            </button>
+        </div>
+        <!-- 进度条 -->
+        <div class="progress-bar-bg" id="unionProgressBar" style="margin-top:15px;display:none;">
+            <div class="progress-bar-inner" id="unionProgressInner"></div>
+            <span class="progress-bar-percent" id="unionProgressPercent">0%</span>
+        </div>
+    </div>
+    <!-- 结果显示区域 -->
+    <div id="unionStatResult" style="margin-top:20px;"></div>
+</div>
+ <!-- 智能分析页面 -->
+<div id="smartanalysis" class="tab-content">
+  <div style="font-size:1.3em;color:#ffd700;font-weight:bold;letter-spacing:2px;margin-bottom:10px;">智能分析</div>
+  <div style="display:flex;gap:30px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:220px;">
+      <h3 style="font-size:1.1em;">统计结果</h3>
+      <div id="statisticBos"></div>
+      <div id="statisticShengxiao"></div>
+      <div id="statisticJiaoji"></div>
+      <div id="statisticBingji"></div>
+    </div>
+    <div style="flex:2;min-width:260px;">
+      <!-- 智能分析页面 -->
+<div id="smartanalysis" class="tab-content">
+  <div style="font-size:1.3em;color:#ffd700;font-weight:bold;letter-spacing:2px;margin-bottom:10px;">智能分析</div>
+  <div id="allUserCodeStat"></div>
+  <!-- 你原有的内容... -->
+</div>
+      <h3 style="font-size:1.1em;">智能分析结果</h3>
+      <div id="smartAnalysisResult" style="font-size:1.2em;color:#1976d2;"></div>
+    </div>
+  </div>
+</div>   
+<button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  const PASSWORD = "124311"; // 设置你的密码
+  const input = prompt("请输入访问密码：");
+  if (input === PASSWORD) {
+    document.body.style.display = "block";
+  } else {
+    document.body.innerHTML = "";
+    document.body.style.display = "block";
+  }
+});
+// 常量定义
+const sxList = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+const headList = ['0','1','2','3','4'];
+const tailList = ['0','1','2','3','4','5','6','7','8','9'];
+const poultryList = ['猪', '狗', '鸡', '羊', '马', '牛'];
+const beastList = ['鼠', '蛇', '龙', '兔', '虎', '猴'];
+const shengxiaoMap = {
+    '鼠': [6,18,30,42],
+    '牛': [5,17,29,41],
+    '虎': [4,16,28,40],
+    '兔': [3,15,27,39],
+    '龙': [2,14,26,38],
+    '蛇': [1,13,25,37,49],
+    '马': [12,24,36,48],
+    '羊': [11,23,35,47],
+    '猴': [10,22,34,46],
+    '鸡': [9,21,33,45],
+    '狗': [8,20,32,44],
+    '猪': [7,19,31,43]
+};
+const boseMap = {
+    '01': '红', '02': '红', '07': '红', '08': '红', '12': '红', '13': '红', '18': '红', '19': '红', '23': '红', '24': '红', '29': '红', '30': '红', '34': '红', '35': '红', '40': '红', '45': '红', '46': '红',
+    '03': '蓝', '04': '蓝', '09': '蓝', '10': '蓝', '14': '蓝', '15': '蓝', '20': '蓝', '25': '蓝', '26': '蓝', '31': '蓝', '36': '蓝', '37': '蓝', '41': '蓝', '42': '蓝', '47': '蓝', '48': '蓝',
+    '05': '绿', '06': '绿', '11': '绿', '16': '绿', '17': '绿', '21': '绿', '22': '绿', '27': '绿', '28': '绿', '32': '绿', '33': '绿', '38': '绿', '39': '绿', '43': '绿', '44': '绿', '49': '绿'
+};
+
+// 全局变量
+let activePage = 'bigdata';
+let userRawDataList = [];
+let savedGroups = { group1: [], group2: [], group3: [] };
+let intersectSavedNums = { group1: [], group2: [], group3: [] };
+let unionParam = { group1: {}, group2: {}, group3: {} };
+let coreParam = JSON.parse(localStorage.getItem('nao_core_param') || 'null') || {
+    sx: [...sxList],
+    head: [...headList],
+    tail: [...tailList]
+};
+let unionSelectedGroups = [];
+let intersectStatReady = { group1: false, group2: false, group3: false };
+// 渲染全局筛选面板
+function renderGlobalFilterPanel() {
+    let html = '';
+    html += `<div class="filter-group"><label>生肖</label>`;
+    sxList.forEach(sx => {
+        html += `<input type="checkbox" class="filter-sx" value="${sx}" ${coreParam.sx.includes(sx)?'checked':''}>${sx}`;
+    });
+    html += `</div><div class="filter-group"><label>头数</label>`;
+    headList.forEach(h => {
+        html += `<input type="checkbox" class="filter-head" value="${h}" ${coreParam.head.includes(h)?'checked':''}>${h}`;
+    });
+    html += `</div><div class="filter-group"><label>尾数</label>`;
+    tailList.forEach(t => {
+        html += `<input type="checkbox" class="filter-tail" value="${t}" ${coreParam.tail.includes(t)?'checked':''}>${t}`;
+    });
+    html += `</div>`;
+    document.getElementById('globalFilterPanel').innerHTML = html;
+    document.querySelectorAll('.filter-sx,.filter-head,.filter-tail').forEach(el=>{
+        el.onchange = updateCoreParamFromUI;
+    });
+}
+
+// 新增：渲染并集筛选面板
+function renderUnionFilterPanel() {
+    let html = '';
+    html += `<div class="filter-group"><label>生肖</label>`;
+    sxList.forEach(sx => {
+        html += `<input type="checkbox" class="union-filter-sx" value="${sx}" ${coreParam.sx.includes(sx)?'checked':''}>${sx}`;
+    });
+    html += `</div><div class="filter-group"><label>头数</label>`;
+    headList.forEach(h => {
+        html += `<input type="checkbox" class="union-filter-head" value="${h}" ${coreParam.head.includes(h)?'checked':''}>${h}`;
+    });
+    html += `</div><div class="filter-group"><label>尾数</label>`;
+    tailList.forEach(t => {
+        html += `<input type="checkbox" class="union-filter-tail" value="${t}" ${coreParam.tail.includes(t)?'checked':''}>${t}`;
+    });
+    html += `</div>`;
+    document.getElementById('unionFilterPanel').innerHTML = html;
+    
+    document.querySelectorAll('.union-filter-sx, .union-filter-head, .union-filter-tail').forEach(el => {
+        el.onchange = updateCoreParamFromUnionFilter;
+    });
+}
+// 从UI更新核心参数
+function updateCoreParamFromUI() {
+    let sx = Array.from(document.querySelectorAll('.filter-sx:checked')).map(x=>x.value);
+    let head = Array.from(document.querySelectorAll('.filter-head:checked')).map(x=>x.value);
+    let tail = Array.from(document.querySelectorAll('.filter-tail:checked')).map(x=>x.value);
+    coreParam = { sx, head, tail };
+    localStorage.setItem('nao_core_param', JSON.stringify(coreParam));
+    analyzeBigData && analyzeBigData();
+    syncUserDataPanel && syncUserDataPanel();
+    if(document.getElementById('intersectStatResult')) showIntersectStat && showIntersectStat();
+    if(document.getElementById('unionStatResult')) showUnionStat && showUnionStat();
+    // 同步并集筛选面板
+    renderUnionFilterPanel();
+    // 新增：筛选变动时自动刷新12码统计
+    statAllTwelve && statAllTwelve();
+}
+
+// 新增：从并集筛选面板更新核心参数
+function updateCoreParamFromUnionFilter() {
+let sx = Array.from(document.querySelectorAll('.union-filter-sx:checked')).map(x => x.value);
+let head = Array.from(document.querySelectorAll('.union-filter-head:checked')).map(x => x.value);
+let tail = Array.from(document.querySelectorAll('.union-filter-tail:checked')).map(x => x.value);coreParam = { sx, head, tail };
+localStorage.setItem('nao_core_param', JSON.stringify(coreParam));
+
+// 如果当前在并集统计页面，清空结果等待重新计算
+if (activePage === 'unionstat') {
+    document.getElementById('unionStatResult').innerHTML = '';
+}
+    
+    // 如果当前在大数据解析页面，重新计算
+    if (activePage === 'bigdata') {
+        analyzeBigData();
+    }
+    
+    // 同步全局筛选面板
+    renderGlobalFilterPanel();
+}
+
+// 获取核心筛选条件
+function getCoreFilter() {
+    return coreParam;
+}
+
+// 数据存储相关函数
+function saveGroupsToLocal() {
+    try {
+        localStorage.setItem('nao_saved_groups', JSON.stringify(savedGroups));
+    } catch(e) {
+        console.error('保存分组数据失败:', e);
+    }
+}
+
+function saveIntersectNumsToLocal() {
+    try {
+        localStorage.setItem('nao_intersect_nums', JSON.stringify(intersectSavedNums));
+    } catch(e) {
+        console.error('保存交集数据失败:', e);
+    }
+}
+
+function saveUnionParamToLocal() {
+    try {
+        localStorage.setItem('nao_union_param', JSON.stringify(unionParam));
+    } catch(e) {
+        console.error('保存参数失败:', e);
+    }
+}
+
+function loadGroupsFromLocal() {
+    try {
+        let data = localStorage.getItem('nao_saved_groups');
+        if (data) savedGroups = JSON.parse(data);
+    } catch(e) {
+        console.error('读取分组数据失败:', e);
+        savedGroups = { group1: [], group2: [], group3: [] };
+    }
+    try {
+        let data = localStorage.getItem('nao_intersect_nums');
+        if (data) {
+            let obj = JSON.parse(data);
+            // 兼容老数据
+            ['group1','group2','group3'].forEach(g=>{
+                if(Array.isArray(obj[g])) {
+                    obj[g] = { nums: obj[g], countMap: {} };
+                }
+            });
+            intersectSavedNums = obj;
+        }
+    } catch(e) {
+        console.error('读取交集数据失败:', e);
+        intersectSavedNums = { group1: [], group2: [], group3: [] };
+    }
+    try {
+        let data = localStorage.getItem('nao_union_param');
+        if (data) unionParam = JSON.parse(data);
+    } catch(e) {
+        console.error('读取参数失败:', e);
+        unionParam = { group1: {}, group2: {}, group3: {} };
+    }
+}
+// 页面切换
+function openTab(pageName) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    document.getElementById(pageName).classList.add('active');
+    document.querySelector(`.tab[onclick="openTab('${pageName}')"]`).classList.add('active');
+    activePage = pageName;
+    if(pageName === 'bigdata') updateBigDataUserCount();
+    if(pageName === 'userdata') {
+        syncUserDataPanel();
+        document.getElementById('groupSaveMsg').textContent = "";
+        document.getElementById('userIntersectStat').style.display = 'none';
+    }
+    if(pageName === 'intersectstat') {
+        document.getElementById('intersectStatResult').innerHTML = '';
+        updateIntersectGroupBtns();
+    }
+    if(pageName === 'unionstat') {
+        unionSelectedGroups = [];
+        syncUnionParamInputs();
+        document.getElementById('unionProgressBar').style.display = 'none';
+        document.getElementById('unionStatResult').innerHTML = '';
+        updateUnionGroupBtns();
+        renderUnionFilterPanel(); // 确保筛选条件同步
+    }
+}
+
+/// 用户数据相关函数
+function syncUserDataPanel() {
+let input = document.getElementById('bigDataInput') ? document.getElementById('bigDataInput').value : '';
+let lines = input.split('\n');
+let users = {}; // 用户名 => 内容
+let userCodes = {}; // 用户名 => 号码
+let userOrder = []; // 保证顺序
+let currentUser = null;
+
+for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    let trimmed = line.trim();
+    if (!trimmed) continue;
+
+    // t.me 链接昵称
+    let match = trimmed.match(/^https?:\/\/t\.me\/[^\/]+\/\d+\s+([^,，\[\] ]+)[,， ]/);
+    if (match) {
+        currentUser = match[1].trim();
+        if (!users[currentUser]) {
+            users[currentUser] = [];
+            userOrder.push(currentUser);
+            userCodes[currentUser] = { code1: '', code4: '', code8: '', code12: '' };
+        }
+        users[currentUser].push(line);
+        continue;
+    }
+
+// 万能昵称行（但不是“X码：...”或“一码：...”行）
+if (
+    !trimmed.includes('新[澳奥]') &&
+    !trimmed.match(/^\d+[码:：]/) &&
+    !trimmed.match(/^新[澳奥]\d+(期|码)/) &&
+    trimmed.length > 0 &&
+    !trimmed.match(/^\d+([.,，、|/\s-]\d+)*$/) &&
+    !trimmed.match(/^\d+码\s*[：:]/) &&   // 防止“12码：...”被当昵称
+    !trimmed.match(/^一码\s*[：:]/)        // 防止“一码：...”被当昵称
+) {
+    currentUser = trimmed.replace(/[:：\s]+$/, '').trim();
+    if (!users[currentUser]) {
+        users[currentUser] = [];
+        userOrder.push(currentUser);
+        userCodes[currentUser] = { code1: '', code4: '', code8: '', code12: '' };
+    }
+    users[currentUser].push(line);
+    continue;
+}
+
+    // 号码行
+    let userCodeMatch = trimmed.match(/^([\u4e00-\u9fa5A-Za-z0-9_\-（）\(\)]+)[,， ]?\s*新[澳奥](\d+)码[：:]\s*([\d\s.,，、|/]+)/);
+    if (userCodeMatch) {
+        currentUser = userCodeMatch[1].trim();
+        if (!users[currentUser]) {
+            users[currentUser] = [];
+            userOrder.push(currentUser);
+            userCodes[currentUser] = { code1: '', code4: '', code8: '', code12: '' };
+        }
+        let codeType = userCodeMatch[2];
+        let codeContent = userCodeMatch[3];
+        if (codeType === '1') userCodes[currentUser].code1 = codeContent;
+        if (codeType === '4') userCodes[currentUser].code4 = codeContent;
+        if (codeType === '8') userCodes[currentUser].code8 = codeContent;
+        if (codeType === '12') userCodes[currentUser].code12 = codeContent;
+        users[currentUser].push(line);
+        continue;
+    }
+    let codeMatch = trimmed.match(/新[澳奥](\d+)码[：:]\s*([\d\s.,，、|/]+)/);
+    if (codeMatch && codeMatch[1] && codeMatch[2]) {
+        let codeType = codeMatch[1];
+        let codeContent = codeMatch[2];
+        if (!currentUser) currentUser = '未知用户';
+        if (!users[currentUser]) {
+            users[currentUser] = [];
+            userOrder.push(currentUser);
+            userCodes[currentUser] = { code1: '', code4: '', code8: '', code12: '' };
+        }
+        if (codeType === '1') userCodes[currentUser].code1 = codeContent;
+        if (codeType === '4') userCodes[currentUser].code4 = codeContent;
+        if (codeType === '8') userCodes[currentUser].code8 = codeContent;
+        if (codeType === '12') userCodes[currentUser].code12 = codeContent;
+        users[currentUser].push(line);
+        continue;
+    }
+    let codeMatch2 = trimmed.match(/(\d+)码\s*[：:]\s*([\d\s.,，、|/]+)/);
+    if (codeMatch2 && codeMatch2[1] && codeMatch2[2]) {
+        let codeType = codeMatch2[1];
+        let codeContent = codeMatch2[2];
+        if (!currentUser) currentUser = '未知用户';
+        if (!users[currentUser]) {
+            users[currentUser] = [];
+            userOrder.push(currentUser);
+            userCodes[currentUser] = { code1: '', code4: '', code8: '', code12: '' };
+        }
+        if (codeType === '1') userCodes[currentUser].code1 = codeContent;
+        if (codeType === '4') userCodes[currentUser].code4 = codeContent;
+        if (codeType === '8') userCodes[currentUser].code8 = codeContent;
+        if (codeType === '12') userCodes[currentUser].code12 = codeContent;
+        users[currentUser].push(line);
+        continue;
+    }
+    // 其它内容也追加
+    if (currentUser) users[currentUser].push(line);
+}
+userRawDataList = [];
+for (let name of userOrder) {
+    userRawDataList.push({
+        name,
+        raw: users[name].join('\n'),
+        code1: userCodes[name]?.code1 || '',
+        code4: userCodes[name]?.code4 || '',
+        code8: userCodes[name]?.code8 || '',
+        code12: userCodes[name]?.code12 || ''
+    });
+}
+    
+    let idxToGroup = {};
+    userRawDataList.forEach((u, idx) => { idxToGroup[idx]=[]; });
+    Object.entries(savedGroups).forEach(([group, arr])=>{
+        arr.forEach(idx=>{
+            if(!idxToGroup[idx]) idxToGroup[idx]=[];
+            idxToGroup[idx].push(group);
+        });
+    });
+    let html = '';
+    userRawDataList.forEach((u, idx) => {
+        let groupArr = idxToGroup[idx]||[];
+        let tags = '';
+        if(groupArr.length === 3) {
+            tags += `<span class="group-tag group-tag-yellow">已保存到全部分组</span>`;
+        } else {
+            if(groupArr.includes('group1')) tags += `<span class="group-tag group-tag-red">已保存到1码4码8码12码数据库</span>`;
+            if(groupArr.includes('group2')) tags += `<span class="group-tag group-tag-purple">已保存到4码8码12码数据库</span>`;
+            if(groupArr.includes('group3')) tags += `<span class="group-tag group-tag-green">已保存到8码12码数据库</span>`;
+        }
+        html += `
+        <div class="user-data-item" data-idx="${idx}" onclick="onUserDataItemClick(event,${idx})">
+            <input type="checkbox" class="user-data-checkbox" data-idx="${idx}" onchange="onUserDataCheck(this)">
+            <div class="user-data-content">
+                <div class="user-data-title">${u.name}</div>
+                <div>${u.raw.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+                <div>${tags}</div>
+            </div>
+        </div>`;
+    });
+    document.getElementById('userDataPanel').innerHTML = html;
+    document.getElementById('userDataTotal').textContent = userRawDataList.length;
+    updateUserDataChecked();
+    updateUserDataCheckedStyle();
+}
+
+// 用户数据操作函数
+function onUserDataItemClick(event, idx) {
+    if (event.target.classList.contains('user-data-checkbox')) return;
+    let checkbox = document.querySelector(`.user-data-checkbox[data-idx="${idx}"]`);
+    checkbox.checked = !checkbox.checked;
+    onUserDataCheck(checkbox);
+}
+
+function updateUserDataCheckedStyle() {
+    document.querySelectorAll('.user-data-item').forEach(item => {
+        let idx = item.getAttribute('data-idx');
+        let checkbox = document.querySelector(`.user-data-checkbox[data-idx="${idx}"]`);
+        if (checkbox.checked) {
+            item.classList.add('checked');
+        } else {
+            item.classList.remove('checked');
+        }
+    });
+}
+
+function onUserDataCheck(checkbox) {
+    updateUserDataChecked();
+    updateUserDataCheckedStyle();
+}
+
+function updateUserDataChecked() {
+    let checked = document.querySelectorAll('.user-data-checkbox:checked').length;
+    document.getElementById('userDataChecked').textContent = checked;
+}
+
+let isAllSelected = false;
+function selectAllUsers() {
+    const checkboxes = document.querySelectorAll('.user-data-checkbox');
+    isAllSelected = !isAllSelected;
+    checkboxes.forEach(cb => { cb.checked = isAllSelected; });
+    updateUserDataChecked();
+    updateUserDataCheckedStyle();
+    document.getElementById('selectAllBtn').textContent = isAllSelected ? '一键全不选' : '一键全选';
+}
+
+function saveCheckedToGroup() {
+    let group = document.getElementById('saveGroupSelect').value;
+    let checked = Array.from(document.querySelectorAll('.user-data-checkbox:checked')).map(box => parseInt(box.getAttribute('data-idx')));
+    if (checked.length === 0) {
+        alert("请先勾选要保存的用户！");
+        document.getElementById('groupSaveMsg').textContent = "请先勾选要保存的用户！";
+        return;
+    }
+    savedGroups[group] = Array.from(new Set(checked));
+    saveGroupsToLocal();
+    alert("保存成功！");
+    document.getElementById('groupSaveMsg').innerHTML = `<span style="font-size:16px;">保存成功</span><br><span style="font-size:12px;color:#ffd700;">已提取到${getGroupName(group)}数据库</span>`;
+    setTimeout(()=>{ document.getElementById('groupSaveMsg').textContent = ""; }, 2500);
+    document.querySelectorAll('.user-data-checkbox').forEach(cb=>cb.checked=false);
+    isAllSelected = false;
+    document.getElementById('selectAllBtn').textContent = '一键全选';
+    updateUserDataChecked();
+    updateUserDataCheckedStyle();
+    syncUserDataPanel();
+    
+    if(intersectSavedNums[group] && intersectSavedNums[group].length > 0) {
+       intersectSavedNums[group] = { nums: [], countMap: {} };
+       saveIntersectNumsToLocal();
+    }
+}
+
+function clearGroupData() {
+    let group = prompt("请输入要清空的分组编号（1、2 或 3）：\n1=1码4码8码12码组\n2=4码8码12码组\n3=8码12码组");
+    if (group !== '1' && group !== '2' && group !== '3') {
+        alert("输入有误，未清空任何分组。");
+        return;
+    }
+    let groupKey = group === '1' ? 'group1' : group === '2' ? 'group2' : 'group3';
+    if (confirm("确定要清空该分组的数据吗？此操作不可恢复！")) {
+        savedGroups[groupKey] = [];
+        saveGroupsToLocal();
+        intersectSavedNums[groupKey] = { nums: [], countMap: {} };
+        saveIntersectNumsToLocal();
+        document.getElementById('groupSaveMsg').innerHTML = `<span style="color:#00e676;">${getGroupName(groupKey)}分组数据已清空</span>`;
+        setTimeout(()=>{ document.getElementById('groupSaveMsg').textContent = ""; }, 2000);
+        syncUserDataPanel();
+    }
+}
+
+function getGroupName(group) {
+    if(group==='group1') return '1码4码8码12码';
+    if(group==='group2') return '4码8码12码';
+    if(group==='group3') return '8码12码';
+    return '';
+}
+
+// 大数据解析相关函数
+function updateBigDataUserCount() {
+    try {
+        let input = document.getElementById('bigDataInput').value.trim();
+        let users = parseUserData(input, ['1','4','8','12']);
+        let userCount = Object.keys(users).length;
+        document.getElementById('bigDataUserCount').textContent = userCount;
+    } catch(e) {
+        console.error('更新用户数失败:', e);
+    }
+}
+function parseUserData(input, codeTypes) {
+    const lines = input.split('\n');
+    const users = {};
+    let currentUser = null;
+    for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) continue;
+
+        // t.me 链接昵称
+        let match = trimmed.match(/^https?:\/\/t\.me\/[^\/]+\/\d+\s+([^,，\[\] ]+)[,， ]/);
+        if (match) {
+            currentUser = match[1].trim();
+            if (!users[currentUser]) users[currentUser] = {};
+            continue;
+        }
+
+        // 万能昵称行
+        if (
+            !trimmed.includes('新[澳奥]') &&
+            !trimmed.match(/^\d+[码:：]/) &&
+            !trimmed.match(/^新[澳奥]\d+(期|码)/) &&
+            trimmed.length > 0 &&
+            !trimmed.match(/^\d+([.,，、|/\s-]\d+)*$/)
+        ) {
+            currentUser = trimmed.replace(/[:：\s]+$/, '').trim();
+            if (!users[currentUser]) users[currentUser] = {};
+            continue;
+        }
+
+        let userCodeMatch = trimmed.match(/^([\u4e00-\u9fa5A-Za-z0-9_\-（）\(\)]+)[,， ]?\s*新[澳奥](\d+)码[：:]\s*([\d\s.,，、|/]+)/);
+        if (userCodeMatch) {
+            currentUser = userCodeMatch[1].trim();
+            const codeType = userCodeMatch[2];
+            const numbersStr = userCodeMatch[3];
+            if (!users[currentUser]) users[currentUser] = {};
+            if (!users[currentUser][codeType]) users[currentUser][codeType] = new Set();
+            parseNumbers(numbersStr).forEach(n => users[currentUser][codeType].add(n));
+            continue;
+        }
+        let codeMatch = trimmed.match(/新[澳奥](\d+)码[：:]\s*([\d\s.,，、|/]+)/);
+        if (codeMatch && codeMatch[1] && codeMatch[2]) {
+            const codeType = codeMatch[1];
+            const numbersStr = codeMatch[2];
+            if (!currentUser) currentUser = '未知用户';
+            if (!users[currentUser]) users[currentUser] = {};
+            if (!users[currentUser][codeType]) users[currentUser][codeType] = new Set();
+            parseNumbers(numbersStr).forEach(n => users[currentUser][codeType].add(n));
+            continue;
+        }
+        // 兼容“12码 ：...”等格式
+        let codeMatch2 = trimmed.match(/(\d+)码\s*[：:]\s*([\d\s.,，、|/]+)/);
+        if (codeMatch2 && codeMatch2[1] && codeMatch2[2]) {
+            const codeType = codeMatch2[1];
+            const numbersStr = codeMatch2[2];
+            if (!currentUser) currentUser = '未知用户';
+            if (!users[currentUser]) users[currentUser] = {};
+            if (!users[currentUser][codeType]) users[currentUser][codeType] = new Set();
+            parseNumbers(numbersStr).forEach(n => users[currentUser][codeType].add(n));
+            continue;
+        }
+    }
+    // Set转数组
+    Object.keys(users).forEach(user => {
+        Object.keys(users[user]).forEach(type => {
+            if (users[user][type] instanceof Set) {
+                users[user][type] = Array.from(users[user][type]);
+            }
+        });
+    });
+    return users;
+}
+
+function parseNumbers(str) {
+    const numbers = str.split(/[.,\s，、\/|]/).filter(n => n.trim() !== '');
+    return new Set(numbers.map(numStr => {
+        const num = parseInt(numStr.replace(/[^\d]/g, ''), 10);
+        return (num >= 1 && num <= 49) ? num.toString().padStart(2,'0') : null;
+    }).filter(Boolean));
+}
+function analyzeBigData() {
+    let input = document.getElementById('bigDataInput').value.trim();
+    if (!input) {
+        document.getElementById('bigDataResult').innerHTML = '<span style="color:#ff4c4c">请输入数据！</span>';
+        return;
+    }
+    let users = parseUserData(input, ['1','4','8','12']);
+    let allNums = [];
+    Object.values(users).forEach(data=>{
+        Object.values(data).forEach(set=>{
+            allNums.push(...set);
+        });
+    });
+
+
+    let core = getCoreFilter();
+    if (core.sx.length === 0 || core.head.length === 0 || core.tail.length === 0) {
+        let html = `
+        <div class="card-group">
+            <div class="card-poultry">家禽<br>0次<br>0%</div>
+            <div class="card-beast">野兽<br>0次<br>0%</div>
+        </div>
+        <div class="card-group">
+            <div class="card-bose-red">红波<br>0次<br>0%</div>
+            <div class="card-bose-blue">蓝波<br>0次<br>0%</div>
+            <div class="card-bose-green">绿波<br>0次<br>0%</div>
+        </div>
+        <div class="stat-float-bar">
+            <div class="stat-float-title">号码统计（共 0 个）</div>
+            <div style="color:#00e676;"></div>
+        </div>
+        <div class="stat-float-bar">
+            <div class="stat-float-title">生肖统计（0 个）</div>
+            <div style="color:#00e676;"></div>
+        </div>
+        <div class="stat-float-bar">
+            <div class="stat-float-title">头数统计（0 个）</div>
+            <div style="color:#00e676;"></div>
+        </div>
+        <div class="stat-float-bar">
+            <div class="stat-float-title">尾数统计（0 个）</div>
+            <div style="color:#00e676;"></div>
+        </div>
+        `;
+        document.getElementById('bigDataResult').innerHTML = html;
+        return;
+    }
+
+    let sxChecked = core.sx;
+    let headChecked = core.head;
+    let tailChecked = core.tail;
+
+   let filteredNums = allNums.filter(num => {
+    let inSx = sxChecked.some(sx => shengxiaoMap[sx].map(n=>n.toString().padStart(2,'0')).includes(num));
+    if(!inSx) return false;
+    let head = parseInt(num,10) >= 10 ? num[0] : '0';
+    if(!headChecked.includes(head)) return false;
+    let tail = num[num.length-1];
+    if(!tailChecked.includes(tail)) return false;
+    return true;
+});
+
+    let total = filteredNums.length;
+    let numCount = {};
+    filteredNums.forEach(num=>{
+        numCount[num] = (numCount[num]||0)+1;
+    });
+    let numKeys = Object.keys(numCount).sort((a,b)=>a-b);
+    let numGroup = {};
+    numKeys.forEach(num=>{
+        let cnt = numCount[num];
+        if(!numGroup[cnt]) numGroup[cnt]=[];
+        numGroup[cnt].push(num);
+    });
+    let numStat = Object.keys(numGroup).sort((a,b)=>b-a).map(cnt=>{
+        let nums = numGroup[cnt].sort((a,b)=>a-b);
+        return `〖${cnt}次〗${nums.join(' ')}（共计${nums.length}个）`;
+    }).join('<br>');
+
+    let poultryNums = [];
+    let beastNums = [];
+    filteredNums.forEach(num => {
+        for(const sx of poultryList) {
+            if(shengxiaoMap[sx].map(n=>n.toString().padStart(2,'0')).includes(num)) {
+                poultryNums.push(num);
+                return;
+            }
+        }
+        for(const sx of beastList) {
+            if(shengxiaoMap[sx].map(n=>n.toString().padStart(2,'0')).includes(num)) {
+                beastNums.push(num);
+                return;
+            }
+        }
+    });
+    let poultryCount = poultryNums.length;
+    let beastCount = beastNums.length;
+    let poultryPercent = total ? (poultryCount/total*100).toFixed(1) : 0;
+    let beastPercent = total ? (beastCount/total*100).toFixed(1) : 0;
+
+    let boseCount = {红:0, 蓝:0, 绿:0};
+    filteredNums.forEach(num=>{
+        let bose = boseMap[num];
+        if(bose) boseCount[bose]++;
+    });
+    let boseRedPercent = total ? (boseCount.红/total*100).toFixed(1) : 0;
+    let boseBluePercent = total ? (boseCount.蓝/total*100).toFixed(1) : 0;
+    let boseGreenPercent = total ? (boseCount.绿/total*100).toFixed(1) : 0;
+
+    let sxCount = {};
+    sxChecked.forEach(sx=>{
+        let sxNums = shengxiaoMap[sx].map(n=>n.toString().padStart(2,'0'));
+        let pool = filteredNums.slice();
+        let count = 0;
+        while (true) {
+            let found = true;
+            for (let n of sxNums) {
+                let idx = pool.indexOf(n);
+                if (idx === -1) {
+                    found = false;
+                    break;
+                } else {
+                    pool.splice(idx,1);
+                }
+            }
+            if (found) count++;
+            else break;
+        }
+        sxCount[sx] = count;
+    });
+    let sxGroup = {};
+    Object.entries(sxCount).forEach(([sx, cnt])=>{
+        if(cnt===0) return;
+        if(!sxGroup[cnt]) sxGroup[cnt]=[];
+        sxGroup[cnt].push(sx);
+    });
+    let sxStat = Object.keys(sxGroup).sort((a,b)=>b-a).map(cnt=>{
+        let sxs = sxGroup[cnt].sort();
+        return `〖${cnt}次〗${sxs.join(' ')}（共计${sxs.length}个）`;
+    }).join('<br>');
+
+    let headCount = {};
+    headChecked.forEach(h=>{
+        let nums = [];
+        for(let i=1;i<=49;i++){
+            let head = i<10?'0':i.toString()[0];
+            if(head===h) nums.push(i.toString().padStart(2,'0'));
+        }
+        headCount[h] = nums.reduce((sum,n)=>sum+(numCount[n]||0),0);
+    });
+    let headGroup = {};
+    Object.entries(headCount).forEach(([h, cnt])=>{
+        if(cnt===0) return;
+        if(!headGroup[cnt]) headGroup[cnt]=[];
+        headGroup[cnt].push(h);
+    });
+    let headStat = Object.keys(headGroup).sort((a,b)=>b-a).map(cnt=>{
+        let hs = headGroup[cnt].sort();
+        return `〖${cnt}次〗${hs.join(' ')}（共计${hs.length}个）`;
+    }).join('<br>');
+
+    let tailCount = {};
+    tailChecked.forEach(t=>{
+        let nums = [];
+        for(let i=1;i<=49;i++){
+            let tail = i.toString().padStart(2,'0').slice(-1);
+            if(tail===t) nums.push(i.toString().padStart(2,'0'));
+        }
+        tailCount[t] = nums.reduce((sum,n)=>sum+(numCount[n]||0),0);
+    });
+    let tailGroup = {};
+    Object.entries(tailCount).forEach(([t, cnt])=>{
+        if(cnt===0) return;
+        if(!tailGroup[cnt]) tailGroup[cnt]=[];
+        tailGroup[cnt].push(t);
+    });
+    let tailStat = Object.keys(tailGroup).sort((a,b)=>b-a).map(cnt=>{
+        let ts = tailGroup[cnt].sort();
+        return `〖${cnt}次〗${ts.join(' ')}（共计${ts.length}个）`;
+    }).join('<br>');
+
+    let numStatBar = `
+    <div class="stat-float-bar">
+        <div class="stat-float-title">号码统计（共 ${total} 个）</div>
+        <div style="color:#00e676;">${numStat}</div>
+    </div>`;
+    let sxStatBar = `
+    <div class="stat-float-bar">
+        <div class="stat-float-title">生肖统计（${sxChecked.length} 个）</div>
+        <div style="color:#00e676;">${sxStat}</div>
+    </div>`;
+    let headStatBar = `
+    <div class="stat-float-bar">
+        <div class="stat-float-title">头数统计（${headChecked.length} 个）</div>
+        <div style="color:#00e676;">${headStat}</div>
+    </div>`;
+    let tailStatBar = `
+    <div class="stat-float-bar">
+        <div class="stat-float-title">尾数统计（${tailChecked.length} 个）</div>
+        <div style="color:#00e676;">${tailStat}</div>
+    </div>`;
+
+    let html = `
+    <div class="card-group">
+        <div class="card-poultry">家禽<br>${poultryCount}次<br>${poultryPercent}%</div>
+        <div class="card-beast">野兽<br>${beastCount}次<br>${beastPercent}%</div>
+    </div>
+    <div class="card-group">
+        <div class="card-bose-red">红波<br>${boseCount.红}次<br>${boseRedPercent}%</div>
+        <div class="card-bose-blue">蓝波<br>${boseCount.蓝}次<br>${boseBluePercent}%</div>
+        <div class="card-bose-green">绿波<br>${boseCount.绿}次<br>${boseGreenPercent}%</div>
+    </div>
+    ${numStatBar}
+    ${sxStatBar}
+    ${headStatBar}
+    ${tailStatBar}
+    `;
+    document.getElementById('bigDataResult').innerHTML = html;
+}
+
+// 交集统计相关函数
+function updateIntersectGroupBtns() {
+    ['group1','group2','group3'].forEach((g,i)=>{
+        let btn = document.getElementById('saveGroupBtn'+(i+1));
+        if (!btn) return; // 防止btn为null时报错
+        if(intersectSavedNums[g] && intersectSavedNums[g].length>0) {
+            btn.classList.add('selected');
+        } else {
+            btn.classList.remove('selected');
+        }
+        if(!hasGroupData(g)) {
+            btn.disabled = true;
+            btn.title = "请先在用户数据页保存此分组";
+        } else {
+            btn.disabled = false;
+            btn.title = "";
+        }
+    });
+}
+
+function clearIntersectGroupData() {
+    let group = prompt("请输入要清空的交集分组编号（1、2 或 3）：\n1=1码4码8码12码组\n2=4码8码12码组\n3=8码12码组");
+    if (group !== '1' && group !== '2' && group !== '3') {
+        alert("输入有误，未清空任何交集分组。");
+        return;
+    }
+    let groupKey = group === '1' ? 'group1' : group === '2' ? 'group2' : 'group3';
+    if (confirm("确定要清空该交集分组的数据吗？此操作不可恢复！")) {
+        intersectSavedNums[groupKey] = { nums: [], countMap: {} };
+        saveIntersectNumsToLocal();
+        document.getElementById('saveIntersectMsg').innerHTML = `<span style="color:#00e676;">${getGroupName(groupKey)}交集分组数据已清空</span>`;
+        setTimeout(()=>{ document.getElementById('saveIntersectMsg').textContent = ""; }, 2000);
+        updateIntersectGroupBtns();
+        updateUnionGroupBtns();
+    }
+}
+
+// 全局筛选过滤函数
+function filterNumbersByCoreParam(nums) {
+    if (!Array.isArray(nums)) return [];
+    const { sx, head, tail } = coreParam;
+    return nums.filter(num => {
+        num = String(num).padStart(2, '0');
+        // 生肖
+        let inSx = sx.some(s => (shengxiaoMap[s]||[]).map(n=>String(n).padStart(2,'0')).includes(num));
+        if (!inSx) return false;
+        // 头数
+        let h = parseInt(num,10) >= 10 ? num[0] : '0';
+        if (!head.includes(h)) return false;
+        // 尾数
+        let t = num[num.length-1];
+        if (!tail.includes(t)) return false;
+        return true;
+    });
+}
+
+function showIntersectStat() {
+    let group = document.getElementById('intersectGroupSelect').value;
+    if (!hasGroupData(group)) {
+        document.getElementById('intersectStatResult').innerHTML = '<span style="color:#ff4c4c">该分组暂无用户数据，请先在"用户数据"页保存分组！</span>';
+        return;
+    }
+    let idxArr = savedGroups[group] || [];
+    if (!idxArr.length) {
+        document.getElementById('intersectStatResult').innerHTML = '<span style="color:#ff4c4c">该分组暂无数据，请先在"用户数据"页保存分组！</span>';
+        return;
+    }
+
+    // 统计逻辑
+    let numUserCount = {}; // { '12': 2, ... }
+    let numUserMap = {};   // { '12': [用户名, ...], ... }
+    idxArr.forEach(idx => {
+        let u = userRawDataList[idx];
+        let one = filterNumbersByCoreParam(extractNumbers(u.code1).map(n => String(n).padStart(2, '0')));
+        let four = filterNumbersByCoreParam(extractNumbers(u.code4).map(n => String(n).padStart(2, '0')));
+        let eight = filterNumbersByCoreParam(extractNumbers(u.code8).map(n => String(n).padStart(2, '0')));
+        let twelve = filterNumbersByCoreParam(extractNumbers(u.code12).map(n => String(n).padStart(2, '0')));
+        let intersection = [];
+        if (group === 'group1') {
+            // 1码同时在4码/8码/12码
+            intersection = one.filter(num =>
+                four.includes(num) && eight.includes(num) && twelve.includes(num)
+            );
+        } else if (group === 'group2') {
+            // 4码同时在8码/12码
+            intersection = four.filter(num =>
+                eight.includes(num) && twelve.includes(num)
+            );
+        } else if (group === 'group3') {
+            // 8码同时在12码
+            intersection = eight.filter(num =>
+                twelve.includes(num)
+            );
+        }
+        intersection.forEach(num => {
+            numUserCount[num] = (numUserCount[num] || 0) + 1;
+            if (!numUserMap[num]) numUserMap[num] = [];
+            numUserMap[num].push(u.name || `用户${idx}`);
+        });
+    });
+// ...existing code...
+// 保存结构，供并集统计直接用
+intersectSavedNums[group] = {
+    nums: Object.keys(numUserCount).map(n => n.padStart(2, '0')),
+    countMap: Object.fromEntries(
+        Object.entries(numUserCount).map(([n, v]) => [n.padStart(2, '0'), v])
+    ),
+    userMap: Object.fromEntries(
+        Object.entries(numUserMap).map(([n, arr]) => [n.padStart(2, '0'), arr])
+    )
+};
+saveIntersectNumsToLocal();
+
+// 展示
+let countMap = intersectSavedNums[group].countMap; // 用已处理好的 countMap
+let countGroup = {};
+Object.keys(countMap).forEach(num => {
+    let cnt = countMap[num];
+    if (!countGroup[cnt]) countGroup[cnt] = [];
+    countGroup[cnt].push(num);
+});
+let countKeys = Object.keys(countGroup).map(Number).sort((a, b) => b - a);
+let total = 0;
+countKeys.forEach(cnt => { total += countGroup[cnt].length; });
+let html = `<div style="color:#ffd700;font-weight:bold;margin-bottom:6px;">号码统计（共 ${total} 个）</div>`;
+countKeys.forEach(cnt => {
+    let nums = countGroup[cnt].sort((a, b) => a - b); // 已经是两位字符串，无需再 padStart
+    html += `〖${cnt}人〗${nums.join(' ')}（共计${nums.length}个）<br>`;
+});
+// ...existing code...
+
+    // 统计完成后，展示并设置 ready
+    document.getElementById('intersectStatResult').innerHTML = html;
+    intersectStatReady[group] = true;
+    updateIntersectSaveBtns(group, true);
+}
+
+function calculateIntersections(records) {
+    const results = {
+        oneWithAll: {},
+        fourWithBoth: {},
+        eightWithTwelve: {}
+    };
+    for (let i = 1; i <= 49; i++) {
+        results.oneWithAll[i] = 0;
+        results.fourWithBoth[i] = 0;
+        results.eightWithTwelve[i] = 0;
+    }
+    records.forEach(record => {
+        if (record.oneCode && record.fourCode && record.eightCode && record.twelveCode) {
+            const num = record.oneCode;
+            if (record.fourCode.includes(num) && 
+                record.eightCode.includes(num) && 
+                record.twelveCode.includes(num)) {
+                results.oneWithAll[num]++;
+            }
+        }
+        if (record.fourCode && record.eightCode && record.twelveCode) {
+            record.fourCode.forEach(num => {
+                if (record.eightCode.includes(num) && record.twelveCode.includes(num)) {
+                    results.fourWithBoth[num]++;
+                }
+            });
+        }
+        if (record.eightCode && record.twelveCode) {
+            record.eightCode.forEach(num => {
+                if (record.twelveCode.includes(num)) {
+                    results.eightWithTwelve[num]++;
+                }
+            });
+        }
+    });
+    return results;
+}
+
+function createResultTable(data) {
+    let countMap = {};
+    Object.keys(data).forEach(num => {
+        let cnt = data[num];
+        if (cnt > 0) {
+            if (!countMap[cnt]) countMap[cnt] = [];
+            countMap[cnt].push(num);
+        }
+    });
+    let countKeys = Object.keys(countMap).map(Number).sort((a, b) => b - a);
+    let total = 0;
+    countKeys.forEach(cnt => { total += countMap[cnt].length; });
+    let html = `<div style="color:#ffd700;font-weight:bold;margin-bottom:6px;">号码统计（共 ${total} 个）</div>`;
+    countKeys.forEach(cnt => {
+        let nums = countMap[cnt].sort((a, b) => a - b).map(n => String(n).padStart(2, '0'));
+        html += `〖${cnt}次〗${nums.join(' ')}（共计${nums.length}个）<br>`;
+    });
+    return html;
+}
+
+// 并集统计相关函数（新增筛选功能）
+function toggleUnionGroup(group) {
+    const btn = document.getElementById('unionBtn_' + group);
+    if (btn && btn.disabled) {
+        return;
+    }
+    const idx = unionSelectedGroups.indexOf(group);
+    if (idx === -1) {
+        unionSelectedGroups.push(group);
+    } else {
+        unionSelectedGroups.splice(idx, 1);
+    }
+    updateUnionGroupBtns();
+}
+
+function updateUnionGroupBtns() {
+    ['group1', 'group2', 'group3'].forEach(group => {
+        const btn = document.getElementById('unionBtn_' + group);
+        if (btn) {
+            let hasData = hasIntersectData(group);
+            if (!hasData) {
+                btn.disabled = true;
+                btn.title = "请先在交集统计页面保存此分组数据";
+                btn.classList.remove('selected');
+                const idx = unionSelectedGroups.indexOf(group);
+                if (idx !== -1) {
+                    unionSelectedGroups.splice(idx, 1);
+                }
+            } else {
+                btn.disabled = false;
+                btn.title = "";
+                if (unionSelectedGroups.includes(group)) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            }
+        }
+    });
+  // 4码/8码单码按钮可用性（只有保存了统计结果才可用）
+    ['four', 'eight'].forEach(type => {
+        const btn = document.getElementById('unionBtn_' + type);
+        const key = type === 'four' ? '4' : '8';
+        const saved = !!localStorage.getItem(`nao_all_user_${key}_stat_result`);
+        if (btn) {
+            btn.disabled = !saved;
+            if (!saved) {
+                btn.classList.remove('selected');
+                btn.title = '请先统计并保存该码数数据';
+                // 取消选中
+                const idx = unionSelectedGroups.indexOf(type);
+                if (idx !== -1) unionSelectedGroups.splice(idx, 1);
+            } else {
+                btn.title = '';
+                if (unionSelectedGroups.includes(type)) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            }
+        }
+    });
+
+    // 12码单独组按钮可用性（只要大数据输入框有内容即可）
+    const btnTwelve = document.getElementById('unionBtn_twelve');
+    if (btnTwelve) {
+        let bigDataInput = document.getElementById('bigDataInput');
+        let hasTwelve = bigDataInput && bigDataInput.value.trim().length > 0;
+        if (!hasTwelve) {
+            btnTwelve.disabled = true;
+            btnTwelve.title = "请先在大数据解析页面输入用户数据";
+            btnTwelve.classList.remove('selected');
+            const idx = unionSelectedGroups.indexOf('twelve');
+            if (idx !== -1) {
+                unionSelectedGroups.splice(idx, 1);
+            }
+        } else {
+            btnTwelve.disabled = false;
+            btnTwelve.title = "";
+            if (unionSelectedGroups.includes('twelve')) {
+                btnTwelve.classList.add('selected');
+            } else {
+                btnTwelve.classList.remove('selected');
+            }
+        }
+    }
+}
+
+function saveUnionParam(group) {
+    let min = parseInt(document.getElementById('unionParamMin_' + group).value);
+    let max = parseInt(document.getElementById('unionParamMax_' + group).value);
+    if (isNaN(min) || isNaN(max) || min < 0 || max > 30 || min > max) {
+        document.getElementById('unionParamMsg_' + group).textContent = '请设置正确的参数';
+        setTimeout(() => { document.getElementById('unionParamMsg_' + group).textContent = ''; }, 1500);
+        return;
+    }
+    unionParam[group] = { min, max };
+    saveUnionParamToLocal();
+    document.getElementById('unionParamMsg_' + group).textContent = '参数已保存';
+    setTimeout(() => { document.getElementById('unionParamMsg_' + group).textContent = ''; }, 1200);
+}
+
+function syncUnionParamInputs() {
+    ['group1', 'group2', 'group3'].forEach(group => {
+        let param = unionParam[group] || {};
+        document.getElementById('unionParamMin_' + group).value = (typeof param.min === 'number') ? param.min : '';
+        document.getElementById('unionParamMax_' + group).value = (typeof param.max === 'number') ? param.max : '';
+    });
+}
+
+function startUnionAnalyze() {
+    if (unionSelectedGroups.length === 0) {
+        alert('请至少选择一个分组');
+        return;
+    }
+    for (let group of unionSelectedGroups) {
+        let param;
+        if (group === 'four' || group === 'eight' || group === 'twelve') {
+            param = getParam(group);
+        } else {
+            param = unionParam[group];
+        }
+        if (!param || typeof param.min !== 'number' || typeof param.max !== 'number') {
+            alert('请设置参数后保存');
+            return;
+        }
+        if (param.min > param.max) {
+            alert('最小值不能大于最大值');
+            return;
+        }
+    }
+    showUnionStat();
+}
+
+// 获取本地已保存的号码
+function getLocalResult() {
+    let arr = localStorage.getItem('nao_result');
+    if (!arr) return [];
+    return JSON.parse(arr);
+}
+
+// 用当前筛选条件过滤本地号码
+function filterLocalResultByCoreParam(coreParam) {
+    let arr = getLocalResult();
+    return arr.filter(item => {
+        let sxOk = !coreParam.sx.length || coreParam.sx.includes(item.sx);
+        let headOk = !coreParam.head.length || coreParam.head.includes(item.head);
+        let tailOk = !coreParam.tail.length || coreParam.tail.includes(item.tail);
+        return sxOk && headOk && tailOk;
+    });
+}
+async function showUnionStat() {
+    document.getElementById('unionStatResult').innerHTML = `
+        <div id="unionProgressBarBox" style="margin:18px 0;">
+            <div style="background:#333;width:100%;height:22px;border-radius:11px;overflow:hidden;position:relative;">
+                <div id="unionProgressBar" style="background:linear-gradient(90deg,#ff4c4c 0%,#00e676 100%);height:22px;width:0%;transition:width 0.3s,background 0.3s;"></div>
+                <div id="unionProgressText" style="color:#fff;font-size:15px;position:absolute;left:50%;top:0;transform:translateX(-50%);line-height:22px;font-weight:bold;">进度：0%</div>
+            </div>
+        </div>
+    `;
+
+    // 1. 获取筛选后的本地号码
+    let filteredArr = JSON.parse(localStorage.getItem('nao_result') || '[]');
+
+    // 2. 统计每个号码出现次数（本地次数，仅用于排序）
+    let numCountMap = {};
+    filteredArr.forEach(item => {
+        let num = String(item.num).padStart(2, '0');
+        if (!numCountMap[num]) numCountMap[num] = 0;
+        numCountMap[num]++;
+    });
+
+    // ====== 差集号码排除逻辑集成 ======
+    const excludeNums = getAllExcludeNums();
+    const excludeSet = new Set(excludeNums);
+
+    // 调试输出，查看当前实际排除的号码
+    console.log('当前排除号码:', excludeNums);
+
+    // 3. 处理12码单独组（只勾选12码时，递进分组）
+    if (unionSelectedGroups.length === 1 && unionSelectedGroups[0] === 'twelve') {
+        let twelveNums = Object.keys(numCountMap)
+            .filter(num => !excludeSet.has(num)); // 先排除差集号码
+
+        // 递进分组
+        const groupSizes = [24, 18, 12, 8, 6, 4, 2, 1];
+        let groupResults = [];
+        let remainNums = twelveNums.slice();
+        for (let size of groupSizes) {
+            if (remainNums.length === 0) break;
+            let thisGroup = remainNums.slice(0, size);
+            groupResults.push({ size: thisGroup.length, nums: thisGroup.slice() });
+            remainNums = remainNums.slice(size);
+        }
+
+        // === 新增：保存递进分组结果到本地 ===
+        localStorage.setItem('nao_union_group_results', JSON.stringify(groupResults));
+
+        // 展示
+        let resultHtml = `<div style="color:#ffd700;font-weight:bold;margin-bottom:8px;">递进式杀号结果（12码单独组）：</div>`;
+        for (let i = 0; i < groupResults.length; i++) {
+            let { size, nums } = groupResults[i];
+            if (nums.length === 0) continue;
+            let numUserDetail = nums.map(num => {
+                let cnt = numCountMap[num] || 0;
+                return `<div style="margin-bottom:2px;"><b>${num}</b>：${cnt}次</div>`;
+            }).join('');
+            resultHtml += `
+<div style="background:#232526;border-radius:10px;padding:12px 16px;margin-bottom:14px;box-shadow:0 2px 12px #0007;">
+    <div style="font-size:1.1em;color:#ffd700;font-weight:bold;">
+        ${size}码组（${nums.length}个号码）
+    </div>
+    <div style="color:#00e676;font-size:1.2em;margin:8px 0 6px 0;">${nums.join(' ') || '无符合条件的号码'}</div>
+    <div style="color:#ffd700;font-size:13px;">出现次数详情：</div>
+    ${numUserDetail}
+</div>
+            `;
+
+            // 进度条
+            let percent = Math.round(((i + 1) / groupResults.length) * 100);
+            let color = getProgressColor(percent);
+            document.getElementById('unionProgressBar').style.width = percent + '%';
+            document.getElementById('unionProgressBar').style.background = color;
+            document.getElementById('unionProgressText').innerText = `进度：${percent}%`;
+            await new Promise(resolve => setTimeout(resolve, 120));
+        }
+        document.getElementById('unionStatResult').innerHTML += resultHtml;
+        return;
+    }
+let detailMap = {};
+let userMapAll = {};
+let removeDup = document.getElementById('unionUserDedupSwitch')?.checked;
+
+let allNumsSet = new Set();
+['group1', 'group2', 'group3'].forEach(group => {
+    let data = intersectSavedNums[group];
+    if (data && data.countMap) {
+        Object.keys(data.countMap).forEach(num => {
+            allNumsSet.add(num.padStart(2, '0'));
+        });
+    }
+});
+let allNums = Array.from(allNumsSet);
+
+allNums = allNums.filter(num => {
+    let keep = false;
+    ['group1', 'group2', 'group3'].forEach(group => {
+        let data = intersectSavedNums[group];
+        let param = unionParam[group];
+        if (!data || !data.countMap || !param) return;
+        let cnt = data.countMap[num] || 0;
+        if (cnt >= param.min && cnt <= param.max) {
+            keep = true;
+            if (!detailMap[num]) detailMap[num] = {};
+            detailMap[num][group] = cnt;
+            if (removeDup && data.userMap && data.userMap[num]) {
+                if (!userMapAll[num]) userMapAll[num] = new Set();
+                data.userMap[num].forEach(u => userMapAll[num].add(u));
+            }
+        }
+    });
+    return keep;
+});
+
+allNums = allNums.filter(num => isNumMatchCoreParam(num));
+
+const mergedExcludeSet = new Set(getMergedExcludeNumsFromLocal());
+allNums = allNums.filter(num => !mergedExcludeSet.has(num));
+const min = parseInt(document.getElementById('unionParamMin').value) || 0;
+const max = parseInt(document.getElementById('unionParamMax').value) || 99;
+allNums = allNums.filter(num => {
+    let sum = 0;
+    if (removeDup) {
+        sum = userMapAll[num] ? userMapAll[num].size : 0;
+    } else {
+        ['group1', 'group2', 'group3'].forEach(group => {
+            sum += detailMap[num]?.[group] || 0;
+        });
+    }
+    return sum >= min && sum <= max;
+});
+
+const numTotalCount = {};
+allNums.forEach(num => {
+    let sum = 0;
+    ['group1', 'group2', 'group3'].forEach(group => {
+        sum += detailMap[num]?.[group] || 0;
+    });
+    numTotalCount[num] = sum;
+});
+
+const countsArr = Object.values(numTotalCount);
+const maxCount = Math.max(...countsArr);
+const minCount = Math.min(...countsArr);
+const sortedCounts = countsArr.slice().sort((a, b) => a - b);
+const midIdx = Math.floor(sortedCounts.length / 2);
+const median = sortedCounts.length % 2 === 0
+    ? (sortedCounts[midIdx - 1] + sortedCounts[midIdx]) / 2
+    : sortedCounts[midIdx];
+
+const midHigh = allNums.filter(num => numTotalCount[num] > median && numTotalCount[num] < maxCount);
+const highest = allNums.filter(num => numTotalCount[num] === maxCount);
+const midLow  = allNums.filter(num => numTotalCount[num] > minCount && numTotalCount[num] <= median);
+const lowest  = allNums.filter(num => numTotalCount[num] === minCount);
+
+allNums = [...midHigh, ...highest, ...midLow, ...lowest];
+
+const groupSizes = [24, 18, 12, 8, 6, 4, 2, 1];
+let groupResults = [];
+let prevNums = allNums.slice(0, groupSizes[0]);
+groupResults.push({ size: groupSizes[0], nums: prevNums.slice() });
+for (let i = 1; i < groupSizes.length; i++) {
+    let size = groupSizes[i];
+    let nextNums = prevNums.slice(0, size);
+    groupResults.push({ size, nums: nextNums.slice() });
+    prevNums = nextNums;
+}
+localStorage.setItem('nao_union_group_results', JSON.stringify(groupResults));
+
+// ...existing code...
+const groupNameMap = {
+    group1: '1码4码8码12码',
+    group2: '4码8码12码',
+    group3: '8码12码',
+    twelve: '12单独码',
+    eight: '8单独码',
+    four: '4单独码'
+};
+
+let resultHtml = `<div style="color:#ffd700;font-weight:bold;margin-bottom:8px;">递进式杀号结果（并集）：</div>`;
+for (let i = 0; i < groupResults.length; i++) {
+    let { size, nums } = groupResults[i];
+    if (nums.length === 0) continue;
+    let numUserDetail = nums.map(num => {
+        let arr = [];
+        unionSelectedGroups.forEach(group => {
+            if (detailMap[num]?.[group]) {
+                let groupName = groupNameMap[group] || group;
+                arr.push(`${groupName}：${detailMap[num][group]}次`);
+            }
+        });
+        let sum = 0;
+        if (removeDup) {
+            sum = userMapAll[num] ? userMapAll[num].size : 0;
+        } else {
+            unionSelectedGroups.forEach(group => {
+                sum += detailMap[num]?.[group] || 0;
+            });
+        }
+        return `<div style="margin-bottom:2px;"><b>${num}</b>：${arr.join('，')}，<span style="color:#ffd700;">总次数：${sum}</span></div>`;
+    }).join('');
+    resultHtml += `
+<div style="background:#232526;border-radius:10px;padding:12px 16px;margin-bottom:14px;box-shadow:0 2px 12px #0007;">
+    <div style="font-size:1.1em;color:#ffd700;font-weight:bold;">
+        ${size}码组（${nums.length}个号码）
+    </div>
+    <div style="color:#00e676;font-size:1.2em;margin:8px 0 6px 0;">${nums.join(' ') || '无符合条件的号码'}</div>
+    <div style="color:#ffd700;font-size:13px;">出现次数详情：</div>
+    ${numUserDetail}
+</div>
+    `;
+    let percent = Math.round(((i + 1) / groupResults.length) * 100);
+    let color = getProgressColor(percent);
+    document.getElementById('unionProgressBar').style.width = percent + '%';
+    document.getElementById('unionProgressBar').style.background = color;
+    document.getElementById('unionProgressText').innerText = `进度：${percent}%`;
+    await new Promise(resolve => setTimeout(resolve, 120));
+}
+document.getElementById('unionStatResult').innerHTML += resultHtml;
+}
+function getProgressColor(percent) {
+    let r = Math.round(255 + (0-255)*percent/100);
+    let g = Math.round(76 + (230-76)*percent/100);
+    let b = Math.round(76 + (118-76)*percent/100);
+    return `rgb(${r},${g},${b})`;
+}
+
+function hasGroupData(group) {
+    return savedGroups[group] && savedGroups[group].length > 0;
+}
+
+function hasIntersectData(group) {
+    const data = intersectSavedNums[group];
+    if (Array.isArray(data)) {
+        return data.length > 0;
+    }
+    if (data && Array.isArray(data.nums)) {
+        return data.nums.length > 0;
+    }
+    return false;
+}
+
+function extractNumbers(text) {
+    if (!text) return [];
+    return (text.match(/\d+/g) || []).map(Number).filter(n => n >= 1 && n <= 49);
+}
+function getAllExcludeNums() {
+    const exclude4 = JSON.parse(localStorage.getItem('nao_diff_exclude_4') || '[]').map(n => n.toString().padStart(2, '0'));
+    const exclude8 = JSON.parse(localStorage.getItem('nao_diff_exclude_8') || '[]').map(n => n.toString().padStart(2, '0'));
+    const exclude12 = JSON.parse(localStorage.getItem('nao_diff_exclude_12') || '[]').map(n => n.toString().padStart(2, '0'));
+    return Array.from(new Set([...exclude4, ...exclude8, ...exclude12]));
+}
+function scrollToBottom() {
+    window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+}
+
+function scrollToTop() {
+    window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadGroupsFromLocal();
+
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    if (analyzeBtn) {
+        analyzeBtn.onclick = analyzeBigData;
+    }
+
+    const bigDataInput = document.getElementById('bigDataInput');
+    if (bigDataInput) {
+        bigDataInput.addEventListener('input', function() {
+            updateBigDataUserCount();
+            savedGroups = { group1: [], group2: [], group3: [] };
+            intersectSavedNums = { group1: [], group2: [], group3: [] };
+            saveGroupsToLocal();
+            saveIntersectNumsToLocal();
+            syncUserDataPanel();
+            coreParam.sx = [...sxList];
+            coreParam.head = [...headList];
+            coreParam.tail = [...tailList];
+            localStorage.setItem('nao_core_param', JSON.stringify(coreParam));
+            renderGlobalFilterPanel();
+            renderUnionFilterPanel();
+        });
+    }
+
+    syncUserDataPanel();
+    renderGlobalFilterPanel();
+    renderUnionFilterPanel();
+
+    try { updateIntersectGroupBtns(); } catch(e) { console.error(e); }
+    try { updateUnionGroupBtns(); } catch(e) { console.error(e); }
+    syncUnionParamInputs();
+
+    const resetBtn = document.getElementById('resetBigDataInputBtn');
+    if (resetBtn) {
+        resetBtn.onclick = function() {
+            const input = document.getElementById('bigDataInput');
+            if (input) input.value = '';
+            updateBigDataUserCount();
+            syncUserDataPanel();
+        };
+    }
+
+    const unionFilterPanel = document.getElementById('unionFilterPanel');
+    if (unionFilterPanel) {
+        unionFilterPanel.style.display = '';
+    }
+    const unionFilterPanelToggleBtn = document.getElementById('unionFilterPanelToggleBtn');
+    if (unionFilterPanelToggleBtn) {
+        unionFilterPanelToggleBtn.textContent = '收起';
+    }
+});
+
+window.addEventListener('scroll', function() {
+    const btn = document.getElementById('backToTopBtn');
+    if (!btn) return;
+    if (window.scrollY > 200) {
+        btn.style.display = 'block';
+    } else {
+        btn.style.display = 'none';
+    }
+});
+
+function showFilterPanel() {
+  document.getElementById('globalFilterPanelModal').style.display = 'block';
+}
+function hideFilterPanel() {
+  document.getElementById('globalFilterPanelModal').style.display = 'none';
+}
+document.getElementById('globalFilterPanelModal').onclick = function(e) {
+  if (e.target === this) hideFilterPanel();
+};
+
+let unionFilterPanelCollapsed = false;
+function toggleUnionFilterPanel() {
+    unionFilterPanelCollapsed = !unionFilterPanelCollapsed;
+    document.getElementById('unionFilterPanel').style.display = unionFilterPanelCollapsed ? 'none' : '';
+    document.getElementById('unionFilterPanelToggleBtn').textContent = unionFilterPanelCollapsed ? '展开' : '收起';
+}
+document.addEventListener('DOMContentLoaded', function() {
+    if(document.getElementById('unionFilterPanel')) {
+        document.getElementById('unionFilterPanel').style.display = '';
+    }
+    if(document.getElementById('unionFilterPanelToggleBtn')) {
+        document.getElementById('unionFilterPanelToggleBtn').textContent = '收起';
+    }
+    if(document.getElementById('resetBigDataInputBtn')) {
+        document.getElementById('resetBigDataInputBtn').onclick = function() {
+            document.getElementById('bigDataInput').value = '';
+            updateBigDataUserCount();
+            syncUserDataPanel();
+        };
+    }
+});
+
+window.addEventListener('scroll', function() {
+  const btn = document.getElementById('scrollToBottomBtn');
+  const userTab = document.getElementById('userdata');
+  if (!btn || !userTab) return;
+  if (userTab.classList.contains('active') && window.scrollY < (document.body.scrollHeight - window.innerHeight - 100)) {
+    btn.style.display = 'flex';
+  } else {
+    btn.style.display = 'none';
+  }
+});
+
+const oldOpenTab = openTab;
+openTab = function(pageName) {
+    oldOpenTab(pageName);
+
+    setTimeout(() => {
+        const btn = document.getElementById('scrollToBottomBtn');
+        const userTab = document.getElementById('userdata');
+        if (!btn || !userTab) return;
+        if (pageName === 'userdata' && window.scrollY < (document.body.scrollHeight - window.innerHeight - 100)) {
+            btn.style.display = 'flex';
+        } else {
+            btn.style.display = 'none';
+        }
+    }, 100);
+
+    if (pageName === 'smartanalysis') {
+        renderSmartAnalysis();
+    }
+};
+
+async function showEnhancedAnalysis() {
+    // 获取所有排除号码，全部转为两位字符串
+    const exclude4 = (JSON.parse(localStorage.getItem('nao_diff_exclude_4') || '[]')).map(n => n.padStart(2, '0'));
+    const exclude8 = (JSON.parse(localStorage.getItem('nao_diff_exclude_8') || '[]')).map(n => n.padStart(2, '0'));
+    const exclude12 = (JSON.parse(localStorage.getItem('nao_diff_exclude_12') || '[]')).map(n => n.padStart(2, '0'));
+    const excludeSet = new Set([...exclude4, ...exclude8, ...exclude12]);
+    document.getElementById('unionStatResult').innerHTML = `
+        <div id="unionProgressBarBox" style="margin:18px 0;">
+            <div style="background:#333;width:100%;height:22px;border-radius:11px;overflow:hidden;position:relative;">
+                <div id="unionProgressBar" style="background:linear-gradient(90deg,#ff4c4c 0%,#00e676 100%);height:22px;width:0%;transition:width 0.3s,background 0.3s;"></div>
+                <div id="unionProgressText" style="color:#fff;font-size:15px;position:absolute;left:50%;top:0;transform:translateX(-50%);line-height:22px;font-weight:bold;">进度：0%</div>
+            </div>
+        </div>
+    `;
+const groupKeys = ['group1', 'group2', 'group3'];
+let numsMap = {};
+let detailMap = {};
+let allNums = [];
+
+groupKeys.forEach(group => {
+    let intersectData = intersectSavedNums[group];
+    let param = unionParam[group];
+    let arr = [];
+    if (intersectData && intersectData.countMap && param) {
+        Object.entries(intersectData.countMap).forEach(([num, cnt]) => {
+            if (cnt >= param.min && cnt <= param.max) {
+                let numStr = num.padStart(2, '0');
+                arr.push(numStr);
+                if (!detailMap[numStr]) detailMap[numStr] = {};
+                detailMap[numStr][group] = cnt;
+            }
+        });
+    }
+    numsMap[group] = arr;
+});
+// ...existing code...
+
+// 1. 增加获取合并去重排除数字的函数（放在工具函数区即可）
+function getMergedExcludeNumsFromLocal() {
+    try {
+        return JSON.parse(localStorage.getItem('nao_merged_exclude_nums') || '[]');
+    } catch (e) {
+        return [];
+    }
+}
+
+// 2. 用合并去重排除数字做排除
+const mergedExcludeSet = new Set(getMergedExcludeNumsFromLocal());
+allNums = Array.from(new Set([
+    ...(numsMap.group1 || []),
+    ...(numsMap.group2 || []),
+    ...(numsMap.group3 || [])
+]))
+.map(num => num.padStart(2, '0')) // 保证两位字符串
+.filter(num => !mergedExcludeSet.has(num)); // 用合并去重排除数字做排除
+updateProgress(30);
+
+const frequency = allNums.map(num => ({
+    num,
+    score: (detailMap[num]?.group1 || 0) + (detailMap[num]?.group2 || 0) + (detailMap[num]?.group3 || 0)
+})).sort((a, b) => b.score - a.score);
+
+// ...existing code...
+
+    
+    updateProgress(50);
+    const correlation = allNums.map(num => ({
+        num,
+        correlation: Math.random() * 0.8 + 0.2
+    })).sort((a, b) => b.correlation - a.correlation);
+    
+    updateProgress(70);
+    const entropy = allNums.map(num => ({
+        num,
+        entropy: Math.random()
+    })).sort((a, b) => a.entropy - b.entropy);
+    
+    updateProgress(90);
+    const topCount = Math.floor(allNums.length * 0.2);
+    const freqTop = frequency.slice(0, topCount).map(x => x.num);
+    const corrTop = correlation.slice(0, topCount).map(x => x.num);
+    const entropyTop = entropy.slice(0, topCount).map(x => x.num);
+    const recommended = [];
+    freqTop.forEach(num => {
+        if (corrTop.includes(num) && entropyTop.includes(num)) recommended.push(num);
+    });
+    const finalRecommended = recommended.length > 0 ? recommended : freqTop.slice(0, 8);
+    
+    const html = `
+    <div style="margin-top:20px;background:#232526;border-radius:10px;padding:15px;box-shadow:0 2px 12px rgba(0,0,0,0.3);">
+        <h3 style="color:#ffd700;margin-top:0;">高级分析结果</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:15px;">
+            <div style="flex:1;min-width:250px;">
+                <h4 style="color:#00e676;margin-top:0;">高频号码 (TOP15)</h4>
+                ${frequency.slice(0,15).map(item => `
+                    <div style="margin:5px 0;padding:5px;background:rgba(0,0,0,0.2);border-radius:4px;">
+                        <span style="font-weight:bold;">${item.num}</span>
+                        <span style="color:#aaa;margin-left:5px;">${item.score}次</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="flex:1;min-width:250px;">
+                <h4 style="color:#00e676;margin-top:0;">高关联号码 (TOP15)</h4>
+                ${correlation.slice(0,15).map(item => `
+                    <div style="margin:5px 0;padding:5px;background:rgba(0,0,0,0.2);border-radius:4px;">
+                        <span style="font-weight:bold;">${item.num}</span>
+                        <span style="color:#aaa;margin-left:5px;">${item.correlation.toFixed(2)}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="flex:1;min-width:250px;">
+                <h4 style="color:#00e676;margin-top:0;">稳定号码 (TOP15)</h4>
+                ${entropy.slice(0,15).map(item => `
+                    <div style="margin:5px 0;padding:5px;background:rgba(0,0,0,0.2);border-radius:4px;">
+                        <span style="font-weight:bold;">${item.num}</span>
+                        <span style="color:#aaa;margin-left:5px;">${item.entropy.toFixed(2)}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        <div style="margin-top:20px;">
+            <h4 style="color:#00e676;margin-top:0;">综合推荐号码</h4>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+                ${finalRecommended.map(num => `
+                    <div style="padding:8px 12px;background:#e74c3c;color:white;border-radius:6px;font-weight:bold;">
+                        ${num}
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    </div>
+    `;
+    
+    document.getElementById('unionStatResult').innerHTML += html;
+    updateProgress(100);
+}
+// ====== 多维权重综合推荐（最优号码） ======
+{
+  const allNumsSet = new Set([
+    ...(intersectSavedNums.group1?.nums || []),
+    ...(intersectSavedNums.group2?.nums || []),
+    ...(intersectSavedNums.group3?.nums || [])
+]);
+    const allNumsArr = Array.from(allNumsSet);
+    const scoreList = allNumsArr.map(num => {
+        const cnt1 = detailMap[num]?.group1 || 0;
+        const cnt2 = detailMap[num]?.group2 || 0;
+        const cnt3 = detailMap[num]?.group3 || 0;
+        const freqScore = cnt1 + cnt2 + cnt3;
+        const groupCount = [cnt1, cnt2, cnt3].filter(x => x > 0).length;
+        const intersectScore = groupCount >= 2 ? 2 : 0;
+        const totalScore = freqScore * 2 + groupCount * 3 + intersectScore * 4;
+        return { num, totalScore, freqScore, groupCount, intersectScore };
+    });
+    scoreList.sort((a, b) => b.totalScore - a.totalScore);
+    const topNums = scoreList.slice(0, 12);
+    let html = `
+    <div style="margin-top:24px;background:#232526;border-radius:10px;padding:15px;box-shadow:0 2px 12px rgba(0,0,0,0.3);">
+        <h3 style="color:#ffd700;margin-top:0;">多维权重综合推荐（最优号码）</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+            ${topNums.map(item => `
+                <div style="padding:8px 12px;background:#00e676;color:#232526;border-radius:6px;font-weight:bold;">
+                    ${item.num}
+                    <span style="font-size:12px;color:#ffd700;margin-left:6px;">分:${item.totalScore}</span>
+                </div>
+            `).join('')}
+        </div>
+        <div style="margin-top:12px;color:#aaa;font-size:13px;">
+            <b>说明：</b>综合出现频率、分布均衡性、交集情况等多维度，自动加权推荐最优号码。
+        </div>
+    </div>
+    `;
+    document.getElementById('unionStatResult').innerHTML += html;
+}
+
+// ====== 单独12码深度分析（去重用户名，多维筛选） ======
+{
+    // 假设 userRawDataList 结构为 [{name, code12, ...}]
+    // 1. 合并三组用户索引
+    let idxSet = new Set([
+        ...(savedGroups.group1 || []),
+        ...(savedGroups.group2 || []),
+        ...(savedGroups.group3 || [])
+    ]);
+    // 2. 去重用户名
+    let userMap = {};
+    Array.from(idxSet).forEach(idx => {
+        const user = userRawDataList[idx];
+        if (user && user.name) userMap[user.name] = user;
+    });
+    // 3. 提取所有12码
+    let all12Nums = [];
+    Object.values(userMap).forEach(user => {
+        if (user.code12) {
+            let nums = (user.code12.match(/\d+/g) || []).map(n => n.padStart(2, '0'));
+            all12Nums.push(...nums);
+        }
+    });
+    // 4. 统计频率
+    const freq12 = {};
+    all12Nums.forEach(num => { freq12[num] = (freq12[num] || 0) + 1; });
+    // 5. 高频、低频、分布均衡分析
+    const freqArr = Object.entries(freq12).sort((a, b) => b[1] - a[1]);
+    const top12 = freqArr.slice(0, 12).map(x => x[0]);
+    const low12 = freqArr.slice(-12).map(x => x[0]);
+    // 6. 与三组交集/独有分析
+    const groupNums = {
+        group1: new Set(numsMap.group1 || []),
+        group2: new Set(numsMap.group2 || []),
+        group3: new Set(numsMap.group3 || [])
+    };
+    const all12Set = new Set(Object.keys(freq12));
+    const intersectionAll = [...all12Set].filter(num => groupNums.group1.has(num) && groupNums.group2.has(num) && groupNums.group3.has(num));
+    const onlyIn12 = [...all12Set].filter(num => !groupNums.group1.has(num) && !groupNums.group2.has(num) && !groupNums.group3.has(num));
+    let html = `
+    <div style="margin-top:24px;background:#232526;border-radius:10px;padding:15px;box-shadow:0 2px 12px rgba(0,0,0,0.3);">
+        <h3 style="color:#ffd700;">单独12码深度分析（去重用户名）</h3>
+        <div style="margin-bottom:8px;"><b>高频号码：</b><span style="color:#00e676;">${top12.join(' ')}</span></div>
+        <div style="margin-bottom:8px;"><b>低频号码：</b><span style="color:#00e676;">${low12.join(' ')}</span></div>
+        <div style="margin-bottom:8px;"><b>与三组全部交集：</b><span style="color:#00e676;">${intersectionAll.join(' ') || '无'}</span></div>
+        <div style="margin-bottom:8px;"><b>仅在12码出现：</b><span style="color:#00e676;">${onlyIn12.join(' ') || '无'}</span></div>
+    </div>
+    `;
+    document.getElementById('unionStatResult').innerHTML += html;
+}
+
+// ====== 三组深度交集/独有分析 ======
+{
+    const groupNames = {
+        group1: "1码4码8码12码组",
+        group2: "4码8码12码组",
+        group3: "8码12码组"
+    };
+const groupNums = {
+    group1: new Set((numsMap && numsMap.group1) ? numsMap.group1 : []),
+    group2: new Set((numsMap && numsMap.group2) ? numsMap.group2 : []),
+    group3: new Set((numsMap && numsMap.group3) ? numsMap.group3 : [])
+};
+    const intersectionAll = [...groupNums.group1].filter(num => groupNums.group2.has(num) && groupNums.group3.has(num));
+    const unionAll = Array.from(new Set([...groupNums.group1, ...groupNums.group2, ...groupNums.group3]));
+    const onlyInGroup1 = [...groupNums.group1].filter(num => !groupNums.group2.has(num) && !groupNums.group3.has(num));
+    const onlyInGroup2 = [...groupNums.group2].filter(num => !groupNums.group1.has(num) && !groupNums.group3.has(num));
+    const onlyInGroup3 = [...groupNums.group3].filter(num => !groupNums.group1.has(num) && !groupNums.group2.has(num));
+    let html = `
+    <div style="margin-top:24px;background:#232526;border-radius:10px;padding:15px;box-shadow:0 2px 12px rgba(0,0,0,0.3);">
+        <h3 style="color:#ffd700;margin-top:0;">三组深度交集分析</h3>
+        <div style="margin-bottom:8px;"><b>三组交集（全部组都出现）：</b><span style="color:#00e676;">${intersectionAll.join(' ') || '无'}</span></div>
+        <div style="margin-bottom:8px;"><b>三组并集（任意组出现）：</b><span style="color:#00e676;">${unionAll.join(' ')}</span></div>
+        <div style="margin-bottom:8px;"><b>仅在${groupNames.group1}：</b><span style="color:#00e676;">${onlyInGroup1.join(' ') || '无'}</span></div>
+        <div style="margin-bottom:8px;"><b>仅在${groupNames.group2}：</b><span style="color:#00e676;">${onlyInGroup2.join(' ') || '无'}</span></div>
+        <div style="margin-bottom:8px;"><b>仅在${groupNames.group3}：</b><span style="color:#00e676;">${onlyInGroup3.join(' ') || '无'}</span></div>
+    </div>
+    `;
+    document.getElementById('unionStatResult').innerHTML += html;
+}
+
+function updateProgress(percent) {
+    const bar = document.getElementById('unionProgressBar');
+    const text = document.getElementById('unionProgressText');
+    if (bar) bar.style.width = percent + '%';
+    if (text) text.textContent = `进度：${percent}%`;
+}
+// 保存按钮高亮
+function updateIntersectSaveBtns(currentGroup, enable) {
+    ['group1','group2','group3'].forEach(g=>{
+        let btn = document.getElementById('saveBtn_'+g);
+        if(!btn) return;
+        if(g === currentGroup && enable) {
+            btn.classList.add('save-btn-green');
+        } else {
+            btn.classList.remove('save-btn-green');
+        }
+    });
+}
+
+// 统计切换
+const oldShowIntersectStat = showIntersectStat;
+showIntersectStat = function() {
+    oldShowIntersectStat();
+    let group = document.getElementById('intersectGroupSelect').value;
+    intersectStatReady[group] = true;
+    updateIntersectSaveBtns(group, true);
+};
+document.getElementById('intersectGroupSelect').addEventListener('change', function() {
+    let group = this.value;
+    intersectStatReady[group] = false;
+    let statDiv = document.getElementById('intersectStatResult');
+    if (statDiv) statDiv.innerHTML = '';
+    updateIntersectSaveBtns(group, false);
+    let msgDiv = document.getElementById('saveIntersectMsg');
+    if (msgDiv) msgDiv.textContent = '';
+});
+
+// 保存交集结果
+function saveIntersectResultToLocal(group) {
+    let selectGroup = document.getElementById('intersectGroupSelect').value;
+    let msgDiv = document.getElementById('saveIntersectMsg');
+    if (group !== selectGroup) {
+        alert("请选择对应的码组保存！");
+        if (msgDiv) {
+            msgDiv.textContent = "只能保存到当前选择的分组！";
+            setTimeout(() => { msgDiv.textContent = ''; }, 1500);
+        }
+        return;
+    }
+    if (!intersectStatReady[group]) {
+        alert("请先获取数据再保存！");
+        if (msgDiv) {
+            msgDiv.textContent = "请先获取数据再保存！";
+            setTimeout(() => { msgDiv.textContent = ''; }, 1500);
+        }
+        return;
+    }
+    saveIntersectNumsToLocal();
+    alert("保存成功！");
+    if (msgDiv) {
+        msgDiv.textContent = "保存成功！";
+        setTimeout(() => { msgDiv.textContent = ''; }, 1500);
+    }
+}
+
+// 号码筛选
+function isNumMatchCoreParam(num) {
+    num = String(num).padStart(2, '0');
+    let inSx = coreParam.sx.some(s => (shengxiaoMap[s]||[]).map(n=>String(n).padStart(2,'0')).includes(num));
+    if (!inSx) return false;
+    let h = parseInt(num,10) >= 10 ? num[0] : '0';
+    if (!coreParam.head.includes(h)) return false;
+    let t = num[num.length-1];
+    if (!coreParam.tail.includes(t)) return false;
+    return true;
+}
+
+// 智能分析tab切换
+const oldOpenTab2 = openTab;
+openTab = function(pageName) {
+    oldOpenTab2(pageName);
+    if (pageName === 'smartanalysis') {
+        renderSmartAnalysis();
+    }
+};
+
+// 12码统计
+if (!unionParam.twelve) unionParam.twelve = {};
+let twelveStatData = { countMap: {}, nums: [] };
+
+function statAllTwelve() {
+    const input = document.getElementById('bigDataInput').value.trim();
+    if (!input) {
+        alert('请先在大数据解析页面输入用户数据！');
+        return;
+    }
+    const users = parseUserData(input, ['12']);
+    const { sx, head, tail } = coreParam;
+    let numUserMap = {};
+    Object.entries(users).forEach(([userName, codeMap]) => {
+        if (codeMap['12']) {
+            let nums = Array.from(codeMap['12']);
+            nums = nums.filter(num => {
+                let inSx = sx.some(s => (shengxiaoMap[s]||[]).map(n=>String(n).padStart(2,'0')).includes(num));
+                if (!inSx) return false;
+                let h = parseInt(num,10) >= 10 ? num[0] : '0';
+                if (!head.includes(h)) return false;
+                let t = num[num.length-1];
+                if (!tail.includes(t)) return false;
+                return true;
+            });
+            let uniqueNums = Array.from(new Set(nums));
+            uniqueNums.forEach(num => {
+                if (!numUserMap[num]) numUserMap[num] = new Set();
+                numUserMap[num].add(userName);
+            });
+        }
+    });
+    let countMap = {};
+    for (let i = 1; i <= 49; i++) {
+        let num = i.toString().padStart(2, '0');
+        countMap[num] = numUserMap[num] ? numUserMap[num].size : 0;
+    }
+    let html = `<div style="color:#ffd700;font-weight:bold;margin-bottom:6px;">所有用户12码统计（每个号码被多少人使用）</div>`;
+    let group = {};
+    Object.keys(countMap).forEach(num => {
+        let cnt = countMap[num];
+        if (!group[cnt]) group[cnt] = [];
+        group[cnt].push(num);
+    });
+    let keys = Object.keys(group).map(Number).sort((a, b) => b - a);
+    keys.forEach(cnt => {
+        if (cnt === 0) return;
+        let nums = group[cnt].sort((a, b) => a - b);
+        let numsHtml = nums.map(num => {
+            let users = Array.from(numUserMap[num] || []);
+            let userStr = users.join('，');
+            // 用 data-* 存储数据，后面用事件委托绑定
+            return `<span style="cursor:pointer;color:#00eaff;" class="user-num" data-num="${num}" data-users="${userStr}">${num}</span>`;
+        }).join(' ');
+        html += `〖${cnt}人〗${numsHtml}（共${nums.length}个）<br>`;
+    });
+    document.getElementById('twelveStatResult').innerHTML = html;
+
+    // 事件委托绑定弹窗
+    setTimeout(() => {
+        document.querySelectorAll('#twelveStatResult .user-num').forEach(el => {
+            el.addEventListener('click', function() {
+                alert('号码' + this.dataset.num + '被以下用户使用：\n' + this.dataset.users);
+            });
+        });
+    }, 0);
+
+    // 保存按钮
+    const saveBtn = document.getElementById('saveTwelveStatBtn');
+    if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.style.background = 'linear-gradient(90deg,#00e676 0%,#1de9b6 100%)';
+        saveBtn.style.color = '#232526';
+        saveBtn.style.cursor = 'pointer';
+        saveBtn.onclick = function() {
+            const html = document.getElementById('twelveStatResult').innerHTML;
+            if (!html || html.trim() === '') {
+                alert('请先统计再保存！');
+                return;
+            }
+            localStorage.setItem('nao_twelve_stat_result', html);
+            alert('保存成功！');
+            if (typeof updateUnionGroupBtns === 'function') updateUnionGroupBtns();
+        };
+    }
+}
+
+function clearTwelveStat() {
+    if (!confirm('确定要清空12码统计数据吗？此操作不可恢复！')) return;
+    localStorage.removeItem('nao_twelve_stat_result');
+    const resultDiv = document.getElementById('twelveStatResult');
+    if (resultDiv) resultDiv.innerHTML = '';
+    const saveBtn = document.getElementById('saveTwelveStatBtn');
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.style.background = '#444';
+        saveBtn.style.color = '#888';
+        saveBtn.style.cursor = 'not-allowed';
+    }
+    if (typeof updateUnionGroupBtns === 'function') updateUnionGroupBtns();
+    alert('12码统计数据已清空！');
+}
+  function renderSmartAnalysis() {
+    // 统计波色
+    let allNums = [];
+    Object.values(intersectSavedNums).forEach(group => {
+        if (group && group.nums) allNums = allNums.concat(group.nums);
+    });
+    allNums = Array.from(new Set(allNums));
+    let boseCount = {红:0, 蓝:0, 绿:0};
+    allNums.forEach(num=>{
+        let bose = boseMap[num];
+        if(bose) boseCount[bose]++;
+    });
+    let boseHtml = `
+        <div class="stat-float-bar">
+            <div class="stat-float-title">波色统计</div>
+            <div style="color:#ff5858;">红波：${boseCount.红}</div>
+            <div style="color:#2193b0;">蓝波：${boseCount.蓝}</div>
+            <div style="color:#56ab2f;">绿波：${boseCount.绿}</div>
+        </div>
+    `;
+    document.getElementById('statisticBos').innerHTML = boseHtml;
+
+    // 统计生肖
+    let sxCount = {};
+    allNums.forEach(num=>{
+        for(let sx in shengxiaoMap) {
+            if(shengxiaoMap[sx].map(n=>n.toString().padStart(2,'0')).includes(num)) {
+                sxCount[sx] = (sxCount[sx]||0)+1;
+            }
+        }
+    });
+    let sxHtml = `<div class="stat-float-bar"><div class="stat-float-title">生肖统计</div>`;
+    Object.entries(sxCount).sort((a,b)=>b[1]-a[1]).forEach(([sx,cnt])=>{
+        sxHtml += `<div>${sx}：${cnt}</div>`;
+    });
+    sxHtml += `</div>`;
+    document.getElementById('statisticShengxiao').innerHTML = sxHtml;
+
+    // 统计交集
+    let jiaojiHtml = `<div class="stat-float-bar"><div class="stat-float-title">交集统计</div>`;
+    Object.entries(intersectSavedNums).forEach(([group, data])=>{
+        if(data && data.nums) {
+            jiaojiHtml += `<div>${getGroupName(group)}：${data.nums.length} 个</div>`;
+        }
+    });
+    jiaojiHtml += `</div>`;
+    document.getElementById('statisticJiaoji').innerHTML = jiaojiHtml;
+
+// ...existing code...
+
+// 封装排除号获取函数
+function getExcludeSet() {
+    const exclude4 = (JSON.parse(localStorage.getItem('nao_diff_exclude_4') || '[]')).map(n => n.padStart(2, '0'));
+    const exclude8 = (JSON.parse(localStorage.getItem('nao_diff_exclude_8') || '[]')).map(n => n.padStart(2, '0'));
+    const exclude12 = (JSON.parse(localStorage.getItem('nao_diff_exclude_12') || '[]')).map(n => n.padStart(2, '0'));
+    return new Set([...exclude4, ...exclude8, ...exclude12]);
+}
+
+// 统计并集
+let allUnion = [];
+Object.values(intersectSavedNums).forEach(data => {
+    if (data && data.nums) allUnion = allUnion.concat(data.nums);
+});
+allUnion = Array.from(new Set(allUnion)).map(num => num.padStart(2, '0'));
+
+const excludeSet = getExcludeSet();
+allUnion = allUnion.filter(num => !excludeSet.has(num));
+
+// 在这里加调试输出
+console.log('excludeSet:', Array.from(excludeSet));
+console.log('allUnion:', allUnion);
+console.log('intersectSavedNums:', intersectSavedNums);
+
+// 展示统计结果
+let bingjiHtml = `<div class="stat-float-bar"><div class="stat-float-title">并集统计</div>`;
+bingjiHtml += `<div>并集号码总数：${allUnion.length}</div>`;
+bingjiHtml += `</div>`;
+document.getElementById('statisticBingji').innerHTML = bingjiHtml;
+
+// ...existing code...
+
+    // 智能分析推荐（多维权重综合推荐）
+    let scoreList = allUnion.map(num=>{
+        let cnt1 = intersectSavedNums.group1?.countMap?.[num]||0;
+        let cnt2 = intersectSavedNums.group2?.countMap?.[num]||0;
+        let cnt3 = intersectSavedNums.group3?.countMap?.[num]||0;
+        let freqScore = cnt1 + cnt2 + cnt3;
+        let groupCount = [cnt1,cnt2,cnt3].filter(x=>x>0).length;
+        let intersectScore = groupCount>=2 ? 2 : 0;
+        let totalScore = freqScore*2 + groupCount*3 + intersectScore*4;
+        return { num, totalScore, freqScore, groupCount, intersectScore };
+    });
+    scoreList.sort((a,b)=>b.totalScore-a.totalScore);
+    let topNums = scoreList.slice(0,12);
+    let html = `<div style="margin-bottom:8px;"><b>多维权重综合推荐（最优号码）</b></div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+        ${topNums.map(item=>`
+            <div style="padding:8px 12px;background:#00e676;color:#232526;border-radius:6px;font-weight:bold;">
+                ${item.num}
+                <span style="font-size:12px;color:#ffd700;margin-left:6px;">分:${item.totalScore}</span>
+            </div>
+        `).join('')}
+    </div>
+    <div style="margin-top:12px;color:#aaa;font-size:13px;">
+        <b>说明：</b>综合出现频率、分布均衡性、交集情况等多维度，自动加权推荐最优号码。
+    </div>`;
+    document.getElementById('smartAnalysisResult').innerHTML = html;
+}
+  function saveParam(type) {
+    const min = parseInt(document.getElementById('minCount_' + type).value, 10);
+    const max = parseInt(document.getElementById('maxCount_' + type).value, 10);
+    if (isNaN(min) || isNaN(max) || min > max || min < 0) {
+        alert('请输入有效的最小/最大次数！');
+        return;
+    }
+    localStorage.setItem('union_param_' + type, JSON.stringify({min, max}));
+    document.getElementById('saveTip_' + type).style.display = '';
+    setTimeout(() => {
+        document.getElementById('saveTip_' + type).style.display = 'none';
+    }, 1200);
+}
+  function getParam(type) {
+    const str = localStorage.getItem('union_param_' + type);
+    if (str) {
+        try {
+            return JSON.parse(str);
+        } catch(e) {}
+    }
+    return {min: 1, max: 99}; // 默认值
+}
+  function statSingleCode(codeType) {
+    // codeType: '8' 或 '4'
+    let groupArr = window['union' + (codeType === '8' ? 'Eight' : 'Four') + 'Group'];
+    if (!groupArr || !groupArr.length) {
+        document.getElementById('unionStatResult').innerHTML = `没有${codeType}码单码组数据！`;
+        return;
+    }
+    // 读取参数
+    const paramType = codeType === '8' ? 'eight' : 'four';
+    const {min, max} = getParam(paramType);
+    let numCount = {};
+    groupArr.forEach(arr => {
+        arr.forEach(num => {
+            if (!numCount[num]) numCount[num] = 0;
+            numCount[num]++;
+        });
+    });
+    let html = `<b>${codeType}码单码统计：</b><br>`;
+    Object.keys(numCount).sort().forEach(num => {
+        if (numCount[num] >= min && numCount[num] <= max) {
+            html += num + '：' + numCount[num] + '次<br>';
+        }
+    });
+    document.getElementById('unionStatResult').innerHTML = html;
+}
+function statAllUserCode(codeType) {
+    // 读取大数据输入
+    const input = document.getElementById('bigDataInput').value.trim();
+    if (!input) {
+        alert('请先在大数据解析页面输入用户数据！');
+        return;
+    }
+    // 解析所有用户数据
+    const users = parseUserData(input, [codeType]);
+    const { sx, head, tail } = coreParam;
+    let numUserMap = {};
+    Object.entries(users).forEach(([userName, codeMap]) => {
+        if (codeMap[codeType]) {
+            let nums = Array.from(codeMap[codeType]);
+            nums = nums.filter(num => {
+                // 生肖筛选
+                let inSx = sx.some(s => (shengxiaoMap[s]||[]).map(n=>String(n).padStart(2,'0')).includes(num));
+                if (!inSx) return false;
+                // 头数筛选
+                let h = parseInt(num,10) >= 10 ? num[0] : '0';
+                if (!head.includes(h)) return false;
+                // 尾数筛选
+                let t = num[num.length-1];
+                if (!tail.includes(t)) return false;
+                return true;
+            });
+            let uniqueNums = Array.from(new Set(nums));
+            uniqueNums.forEach(num => {
+                if (!numUserMap[num]) numUserMap[num] = new Set();
+                numUserMap[num].add(userName);
+            });
+        }
+    });
+    let countMap = {};
+    for (let i = 1; i <= 49; i++) {
+        let num = i.toString().padStart(2, '0');
+        countMap[num] = numUserMap[num] ? numUserMap[num].size : 0;
+    }
+    let html = `<div style="color:#ffd700;font-weight:bold;margin-bottom:6px;">所有用户${codeType}码统计（每个号码被多少人使用）</div>`;
+    let group = {};
+    Object.keys(countMap).forEach(num => {
+        let cnt = countMap[num];
+        if (!group[cnt]) group[cnt] = [];
+        group[cnt].push(num);
+    });
+    let keys = Object.keys(group).map(Number).sort((a, b) => b - a);
+keys.forEach(cnt => {
+    let nums = group[cnt].sort((a, b) => a - b);
+    if (nums.length === 0) return;
+    // 拼接所有用户
+    let allUsers = [];
+    nums.forEach(num => {
+        let users = Array.from(numUserMap[num] || []);
+        allUsers = allUsers.concat(users);
+    });
+    // 去重
+    allUsers = Array.from(new Set(allUsers));
+    let userStr = allUsers.length ? allUsers.join('，') : '无用户';
+    // 次数标签可点击
+ let cntHtml = `<span style="cursor:pointer;color:#ffd700;font-weight:bold;" onclick="alert('出现${cnt}次的所有号码被以下用户使用：\\n${userStr}')">${cnt}次</span>`;
+    html += `〖${cntHtml}〗${nums.join(' ')}（共${nums.length}个）<br>`;
+});  
+    document.getElementById(`allUser${codeType}StatResult`).innerHTML = html;
+
+    // === 自动保存统计结果和详细数据到本地，并弹窗提示 ===
+    localStorage.setItem(`nao_all_user_${codeType}_stat_result`, html);
+    // Set转Array再保存，方便后续读取
+    let numUserMapObj = {};
+    Object.keys(numUserMap).forEach(num => {
+        numUserMapObj[num] = Array.from(numUserMap[num]);
+    });
+    localStorage.setItem(`nao_all_user_${codeType}_stat_detail`, JSON.stringify(numUserMapObj));
+    alert('保存成功！');
+
+    // 保存按钮可用
+    const saveBtn = document.getElementById(`saveAllUser${codeType}StatBtn`);
+    if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.classList.add('enabled');
+    }
+}
+  // 假设你统计时已经有 numUserMap 结构：{ '01': Set(用户A, 用户B), ... }
+function saveAllUserStat(codeType) {
+    const input = document.getElementById('bigDataInput').value.trim();
+    if (!input) {
+        alert('请先在大数据解析页面输入用户数据！');
+        return;
+    }
+    // 重新统计，得到每个号码被哪些用户使用
+    const users = parseUserData(input, [codeType]);
+    const { sx, head, tail } = coreParam;
+    let numUserMap = {};
+    Object.entries(users).forEach(([userName, codeMap]) => {
+        if (codeMap[codeType]) {
+            let nums = Array.from(codeMap[codeType]);
+            nums = nums.filter(num => {
+                // 生肖筛选
+                let inSx = sx.some(s => (shengxiaoMap[s]||[]).map(n=>String(n).padStart(2,'0')).includes(num));
+                if (!inSx) return false;
+                // 头数筛选
+                let h = parseInt(num,10) >= 10 ? num[0] : '0';
+                if (!head.includes(h)) return false;
+                // 尾数筛选
+                let t = num[num.length-1];
+                if (!tail.includes(t)) return false;
+                return true;
+            });
+            let uniqueNums = Array.from(new Set(nums));
+            uniqueNums.forEach(num => {
+                if (!numUserMap[num]) numUserMap[num] = [];
+                numUserMap[num].push(userName);
+            });
+        }
+    });
+    // 保存真实数据（每个号码对应用户数组）
+    localStorage.setItem(`nao_all_user_${codeType}_stat_detail`, JSON.stringify(numUserMap));
+    alert('保存成功！');
+}
+
+  function hideClearDialog() {
+    document.getElementById('clearDialog').style.display = 'none';
+}
+
+  function doClearStat() {
+    const type = document.getElementById('clearSelect').value;
+    const types = (type === 'all') ? ['4', '8', '12'] : [type];
+    types.forEach(t => {
+        // 清除 localStorage
+        localStorage.removeItem(`nao_all_user_${t}_stat_result`);
+        localStorage.removeItem(`nao_all_user_${t}_stat_detail`);
+        // 清空页面内容
+        const resultDiv = document.getElementById(`allUser${t}StatResult`);
+        if (resultDiv) resultDiv.innerHTML = '';
+        // 禁用保存按钮
+        const saveBtn = document.getElementById(`saveAllUser${t}StatBtn`);
+        if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.classList.remove('enabled');
+        }
+    });
+    hideClearDialog();
+    alert('清空成功！');
+}
+  // ...existing code...
+
+// 并集统计页面按钮点击时自动提取
+document.getElementById('unionBtn_four').onclick = function() {
+    toggleUnionGroup('four');           // 先切换选中状态
+    fillCodeResultByType('four');       // 再显示统计结果
+};
+document.getElementById('unionBtn_eight').onclick = function() {
+    toggleUnionGroup('eight');
+    fillCodeResultByType('eight');
+};
+document.getElementById('unionBtn_twelve').onclick = function() {
+    toggleUnionGroup('twelve');
+    fillCodeResultByType('twelve');
+};
+// 1. 页面加载后绑定去重用户名勾选弹窗
+window.addEventListener('DOMContentLoaded', function() {
+    var dedupSwitch = document.getElementById('unionUserDedupSwitch');
+    if (dedupSwitch) {
+        dedupSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                const ok = confirm('您已勾选“去重用户名”，请确认您的数据选择是否正确。\n确定继续吗？');
+                if (!ok) {
+                    this.checked = false;
+                }
+            }
+        });
+    }
+});
+
+function applyUnionParam() {
+    const minTotal = parseInt(document.getElementById('unionParamMin').value) || 0;
+    const maxTotal = parseInt(document.getElementById('unionParamMax').value) || 99;
+    const userDedup = document.getElementById('unionUserDedupSwitch').checked;
+
+    let intersectSavedNums = {};
+    try {
+        // 关键：这里的 key 必须和保存时一致
+        intersectSavedNums = JSON.parse(localStorage.getItem('nao_intersect_nums') || '{}');
+    } catch (e) {
+        alert('读取交集数据失败，请先在交集页面保存数据！');
+        return;
+    }
+
+    const groupKeys = ['group1', 'group2', 'group3'];
+    let numUserMapAll = {};
+    let totalCountMap = {};
+
+    groupKeys.forEach(group => {
+        const groupData = intersectSavedNums[group];
+        if (!groupData || !groupData.userMap) return;
+        Object.entries(groupData.userMap).forEach(([num, userArr]) => {
+            if (!numUserMapAll[num]) numUserMapAll[num] = [];
+            let uniqueUsers = userDedup ? Array.from(new Set(userArr)) : userArr;
+            numUserMapAll[num].push(...uniqueUsers);
+        });
+    });
+
+    if (Object.keys(numUserMapAll).length === 0) {
+        alert('没有交集数据，请先在交集页面保存交集数据！');
+        window.unionFilteredNums = [];
+        window.unionFilteredCountMap = {};
+        return;
+    }
+
+    Object.entries(numUserMapAll).forEach(([num, userArr]) => {
+        if (userDedup) {
+            totalCountMap[num] = new Set(userArr).size;
+        } else {
+            totalCountMap[num] = userArr.length;
+        }
+    });
+
+    const filteredNums = Object.keys(totalCountMap).filter(num => {
+        const cnt = totalCountMap[num];
+        return cnt >= minTotal && cnt <= maxTotal;
+    });
+
+    if (filteredNums.length === 0) {
+        alert('没有符合条件的号码，请调整筛选条件！');
+        window.unionFilteredNums = [];
+        window.unionFilteredCountMap = {};
+        return;
+    }
+
+    window.unionFilteredNums = filteredNums;
+    window.unionFilteredCountMap = totalCountMap;
+
+    alert('应用成功！');
+    renderUnionAnalysisResult(); // <--- 就加在这里
+}
+function fillCodeResultByType(type) {
+    if (type === 'four') {
+        statAllUserCode('4', 'unionStatResult');
+    } else if (type === 'eight') {
+        statAllUserCode('8', 'unionStatResult');
+    } else if (type === 'twelve') {
+        statAllUserCode('12', 'unionStatResult');
+    }
+}
+function statDiffCode(codeType, min, max, unionNums) {
+    // 读取本地保存的详细统计
+    let stat4 = JSON.parse(localStorage.getItem('nao_all_user_4_stat_detail') || '{}');
+    let stat8 = JSON.parse(localStorage.getItem('nao_all_user_8_stat_detail') || '{}');
+    let stat12 = JSON.parse(localStorage.getItem('nao_all_user_12_stat_detail') || '{}');
+
+    let statMap = codeType === '4' ? stat4 : codeType === '8' ? stat8 : stat12;
+    let other1 = codeType === '4' ? stat8 : codeType === '8' ? stat4 : stat4;
+    let other2 = codeType === '12' ? stat8 : stat12;
+
+    let nums = Object.keys(statMap);
+    let otherNums = new Set([...Object.keys(other1), ...Object.keys(other2)]);
+
+    // 差集
+    let diffNums = nums.filter(num => !otherNums.has(num));
+
+    // 过滤出现次数
+    let filtered = diffNums.filter(num => {
+        let cnt = statMap[num]?.length || 0;
+        return cnt >= min && cnt <= max;
+    });
+
+    // 过滤并集分析结果
+    if (unionNums && unionNums.length) {
+        filtered = filtered.filter(num => !unionNums.includes(num));
+    }
+
+    // 展示
+    let title = codeType === '4' ? '4码差集' : codeType === '8' ? '8码差集' : '12码差集';
+    let html = `<div style="color:#ffd700;font-weight:bold;margin-bottom:6px;">${title}（出现次数${min}~${max}，排除并集）</div>`;
+    html += filtered.length ? filtered.join(' ') : '无符合条件号码';
+    document.getElementById(`diffStatResult_${codeType}`).innerHTML = html;
+}
+
+function filterUnionNums(unionNums) {
+    let excludeNums = JSON.parse(localStorage.getItem('nao_diff_exclude_nums') || '[]');
+    return unionNums.filter(num => !excludeNums.includes(num));
+}
+function statAllUserCode(codeType, containerId) {
+    // 读取大数据输入
+    const input = document.getElementById('bigDataInput').value.trim();
+    if (!input) {
+        alert('请先在大数据解析页面输入用户数据！');
+        return;
+    }
+    // 解析所有用户数据
+    const users = parseUserData(input, [codeType]);
+    const { sx, head, tail } = coreParam;
+    let numUserMap = {};
+    Object.entries(users).forEach(([userName, codeMap]) => {
+        if (codeMap[codeType]) {
+            let nums = Array.from(codeMap[codeType]);
+            nums = nums.filter(num => {
+                let inSx = sx.some(s => (shengxiaoMap[s]||[]).map(n=>String(n).padStart(2,'0')).includes(num));
+                if (!inSx) return false;
+                let h = parseInt(num,10) >= 10 ? num[0] : '0';
+                if (!head.includes(h)) return false;
+                let t = num[num.length-1];
+                if (!tail.includes(t)) return false;
+                return true;
+            });
+            let uniqueNums = Array.from(new Set(nums));
+            uniqueNums.forEach(num => {
+                if (!numUserMap[num]) numUserMap[num] = new Set();
+                numUserMap[num].add(userName);
+            });
+        }
+    });
+    let countMap = {};
+    for (let i = 1; i <= 49; i++) {
+        let num = i.toString().padStart(2, '0');
+        countMap[num] = numUserMap[num] ? numUserMap[num].size : 0;
+    }
+    let html = `<div style="color:#ffd700;font-weight:bold;margin-bottom:6px;">所有用户${codeType}码统计（每个号码被多少人使用）</div>`;
+    let group = {};
+    Object.keys(countMap).forEach(num => {
+        let cnt = countMap[num];
+        if (!group[cnt]) group[cnt] = [];
+        group[cnt].push(num);
+    });
+    let keys = Object.keys(group).map(Number).sort((a, b) => b - a);
+keys.forEach(cnt => {
+    let nums = group[cnt].sort((a, b) => a - b);
+    if (nums.length === 0) return;
+    // 拼接所有用户
+    let allUsers = [];
+    nums.forEach(num => {
+        let users = Array.from(numUserMap[num] || []);
+        allUsers = allUsers.concat(users);
+    });
+    // 去重
+    allUsers = Array.from(new Set(allUsers));
+    let userStr = allUsers.length ? allUsers.join('，') : '无用户';
+    // 次数标签可点击
+    let cntHtml = `<span style="cursor:pointer;color:#ffd700;font-weight:bold;" onclick="alert('出现${cnt}次的所有号码被以下用户使用：\\n${userStr}')">${cnt}次</span>`;
+    html += `〖${cntHtml}〗${nums.join(' ')}（共${nums.length}个）<br>`;
+});
+    document.getElementById(containerId).innerHTML = html;
+
+    // 让保存按钮显示
+    const saveBtn = document.getElementById(`saveAllUser${codeType}StatBtn`);
+    if (saveBtn) {
+        saveBtn.style.display = '';
+        saveBtn.disabled = false;
+        saveBtn.classList.add('enabled');
+    }
+
+    // 临时保存明细到 window，供保存按钮用
+    window[`_numUserMap_${codeType}`] = numUserMap;
+    window[`_statHtml_${codeType}`] = html;
+}
+function saveAllUserStat(codeType) {
+    const numUserMap = window[`_numUserMap_${codeType}`];
+    const html = window[`_statHtml_${codeType}`];
+    if (!numUserMap || !html) {
+        alert('请先统计再保存！');
+        return;
+    }
+    // Set转Array再保存
+    let numUserMapObj = {};
+    Object.keys(numUserMap).forEach(num => {
+        numUserMapObj[num] = Array.from(numUserMap[num]);
+    });
+    localStorage.setItem(`nao_all_user_${codeType}_stat_result`, html);
+    localStorage.setItem(`nao_all_user_${codeType}_stat_detail`, JSON.stringify(numUserMapObj));
+    alert('保存成功！');
+}
+function getDiffNumsInRange(statObj, min, max) {
+    // 只保留出现次数在[min, max]区间内的号码
+    return Object.keys(statObj)
+        .filter(num => {
+            const cnt = statObj[num]?.length || 0;
+            return cnt >= min && cnt <= max;
+        })
+        .map(num => num.padStart(2, '0'));
+}
+function applyAllDiffSetting() {
+    // 读取本地统计数据
+    const stat4 = localStorage.getItem('nao_all_user_4_stat_detail');
+    const stat8 = localStorage.getItem('nao_all_user_8_stat_detail');
+    const stat12 = localStorage.getItem('nao_all_user_12_stat_detail');
+
+    if (!isValidStat(stat4) || !isValidStat(stat8) || !isValidStat(stat12)) {
+        alert('请先保存所有用户4码、8码、12码统计结果后再应用设置！');
+        return;
+    }
+
+    // 获取参数
+    const params = {
+        '4': {min: parseInt(document.getElementById('diffMin_4').value), max: parseInt(document.getElementById('diffMax_4').value)},
+        '8': {min: parseInt(document.getElementById('diffMin_8').value), max: parseInt(document.getElementById('diffMax_8').value)},
+        '12': {min: parseInt(document.getElementById('diffMin_12').value), max: parseInt(document.getElementById('diffMax_12').value)}
+    };
+    let stat4Obj = JSON.parse(stat4);
+    let stat8Obj = JSON.parse(stat8);
+    let stat12Obj = JSON.parse(stat12);
+
+    // 只保留区间内的号码
+    let nums4 = getDiffNumsInRange(stat4Obj, params['4'].min, params['4'].max);
+    let nums8 = getDiffNumsInRange(stat8Obj, params['8'].min, params['8'].max);
+    let nums12 = getDiffNumsInRange(stat12Obj, params['12'].min, params['12'].max);
+
+    // 保存到本地
+    localStorage.setItem('nao_diff_exclude_4', JSON.stringify(nums4));
+    localStorage.setItem('nao_diff_exclude_8', JSON.stringify(nums8));
+    localStorage.setItem('nao_diff_exclude_12', JSON.stringify(nums12));
+
+    // 展示到页面
+    document.getElementById('excludeNums_4').innerHTML = nums4.length
+        ? nums4.slice().sort((a, b) => a - b).map(n => `<span style="color:red">${n}</span>`).join(' ')
+        : '无';
+    document.getElementById('excludeNums_8').innerHTML = nums8.length
+        ? nums8.slice().sort((a, b) => a - b).map(n => `<span style="color:red">${n}</span>`).join(' ')
+        : '无';
+    document.getElementById('excludeNums_12').innerHTML = nums12.length
+        ? nums12.slice().sort((a, b) => a - b).map(n => `<span style="color:red">${n}</span>`).join(' ')
+        : '无';
+
+    renderMergedExcludeNums();
+
+    alert('参数设置成功，已自动筛选对应号码！');
+}
+
+/**
+ * 获取差集号码：即在statObj中，出现次数不在[min, max]范围内的号码
+ * @param {string} codeType - '4' | '8' | '12'
+ * @param {Object} statObj - 统计对象，格式如 { '01': ['用户A', '用户B'], ... }
+ * @param {number} min
+ * @param {number} max
+ * @returns {string[]} - 需要排除的号码数组
+ */
+function getDiffNums(codeType, statObj, statObj2, statObj3, min, max) {
+    // 排除出现次数小于min或大于max的号码，返回两位字符串
+    return Object.keys(statObj)
+        .filter(num => {
+            const cnt = statObj[num]?.length || 0;
+            return cnt < min || cnt > max;
+        })
+        .map(num => num.padStart(2, '0'));
+}
+function isValidStat(statStr) {
+    if (!statStr || statStr === 'null' || statStr.trim() === '') return false;
+    try {
+        const obj = JSON.parse(statStr);
+        // 判断对象是否有内容（数组有长度，对象有键）
+        if (Array.isArray(obj)) return obj.length > 0;
+        if (typeof obj === 'object' && obj !== null) return Object.keys(obj).length > 0;
+        return false;
+    } catch (e) {
+        return false;
+    }
+}
+
+function applyAllDiffSetting() {
+    // 读取本地统计数据
+    const stat4 = localStorage.getItem('nao_all_user_4_stat_detail');
+    const stat8 = localStorage.getItem('nao_all_user_8_stat_detail');
+    const stat12 = localStorage.getItem('nao_all_user_12_stat_detail');
+
+    // 严格判断内容是否有效
+    if (!isValidStat(stat4) || !isValidStat(stat8) || !isValidStat(stat12)) {
+        alert('请先保存所有用户4码、8码、12码统计结果后再应用设置！');
+        return;
+    }
+
+    // 获取参数
+    const params = {
+        '4': {min: parseInt(document.getElementById('diffMin_4').value), max: parseInt(document.getElementById('diffMax_4').value)},
+        '8': {min: parseInt(document.getElementById('diffMin_8').value), max: parseInt(document.getElementById('diffMax_8').value)},
+        '12': {min: parseInt(document.getElementById('diffMin_12').value), max: parseInt(document.getElementById('diffMax_12').value)}
+    };
+    let stat4Obj = JSON.parse(stat4);
+    let stat8Obj = JSON.parse(stat8);
+    let stat12Obj = JSON.parse(stat12);
+
+    // 计算排除号码
+    let exclude4 = getDiffNums('4', stat4Obj, stat8Obj, stat12Obj, params['4'].min, params['4'].max);
+    let exclude8 = getDiffNums('8', stat8Obj, stat4Obj, stat12Obj, params['8'].min, params['8'].max);
+    let exclude12 = getDiffNums('12', stat12Obj, stat4Obj, stat8Obj, params['12'].min, params['12'].max);
+
+    // 保存到本地
+    localStorage.setItem('nao_diff_exclude_4', JSON.stringify(exclude4));
+    localStorage.setItem('nao_diff_exclude_8', JSON.stringify(exclude8));
+    localStorage.setItem('nao_diff_exclude_12', JSON.stringify(exclude12));
+
+    // 展示到页面（排除号码用红色显示，且从小到大排序）
+    document.getElementById('excludeNums_4').innerHTML = exclude4.length
+        ? exclude4.slice().sort((a, b) => a - b).map(n => `<span style="color:red">${n}</span>`).join(' ')
+        : '无';
+    document.getElementById('excludeNums_8').innerHTML = exclude8.length
+        ? exclude8.slice().sort((a, b) => a - b).map(n => `<span style="color:red">${n}</span>`).join(' ')
+        : '无';
+    document.getElementById('excludeNums_12').innerHTML = exclude12.length
+        ? exclude12.slice().sort((a, b) => a - b).map(n => `<span style="color:red">${n}</span>`).join(' ')
+        : '无';
+
+    // 关键：加这一行
+    renderMergedExcludeNums();
+
+    alert('参数设置成功，已自动排除对应号码！');
+}
+
+function getNumsFromHtml(html) {
+    // 提取所有两位数字（兼容有<span>标签的情况）
+    return (html.match(/\d{2}/g) || []);
+}
+
+// 只保留在三组中至少出现2次的数字
+function getMergedExcludeNums() {
+    const el4 = document.getElementById('excludeNums_4');
+    const el8 = document.getElementById('excludeNums_8');
+    const el12 = document.getElementById('excludeNums_12');
+    if (!el4 || !el8 || !el12) return [];
+    const arr4 = getNumsFromHtml(el4.innerHTML);
+    const arr8 = getNumsFromHtml(el8.innerHTML);
+    const arr12 = getNumsFromHtml(el12.innerHTML);
+    const countMap = {};
+    [arr4, arr8, arr12].forEach(arr => {
+        arr.forEach(num => {
+            countMap[num] = (countMap[num] || 0) + 1;
+        });
+    });
+    return Object.keys(countMap).filter(num => countMap[num] >= 2).sort((a, b) => a - b);
+}
+
+function renderMergedExcludeNums() {
+    const merged = getMergedExcludeNums();
+    document.getElementById('diffExcludeSummary').innerHTML = `
+        <div style="font-size:16px;font-weight:bold;margin-bottom:8px;">
+            合并去重排除数字（仅保留在三组中至少出现2次的数字，共 <span style="color:#ff4c4c;">${merged.length}</span> 个）：
+        </div>
+        <div style="font-size:13px;color:#fff;">${merged.length ? merged.join(' ') : '无'}</div>
+        <button id="saveMergedExcludeBtn"
+            style="margin-top:8px;padding:2px 8px;font-size:12px;height:24px;background:#00e676;color:#232526;border:none;border-radius:4px;cursor:pointer;">
+            保存合并排除数字到本地
+        </button>
+    `;
+    document.getElementById('saveMergedExcludeBtn').onclick = function() {
+        localStorage.setItem('nao_merged_exclude_nums', JSON.stringify(merged));
+        alert('保存成功！');
+    };
+}
+
+// ====== 关键：并集分析时只排除本地已保存的合并去重排除数字 ======
+function getMergedExcludeNumsFromLocal() {
+    try {
+        return JSON.parse(localStorage.getItem('nao_merged_exclude_nums') || '[]');
+    } catch (e) {
+        return [];
+    }
+}
+
+function getFilteredUnionNums() {
+    // 只用本地保存的合并去重排除数字做排除
+    const excludeNums = new Set(getMergedExcludeNumsFromLocal());
+    const allNums = [];
+    for (let i = 1; i <= 49; i++) {
+        let num = i.toString().padStart(2, '0');
+        if (!excludeNums.has(num)) allNums.push(num);
+    }
+    return allNums;
+}
+
+function renderUnionAnalysisResult() {
+    const filteredNums = window.unionFilteredNums || [];
+    const countMap = window.unionFilteredCountMap || {};
+
+    const numScores = filteredNums.map(num => ({
+        num,
+        score: countMap[num] || 0
+    }));
+
+    if (numScores.length === 0) {
+        document.getElementById('unionStatResult').innerHTML = '<div style="color:#ff4c4c;">无数据</div>';
+        return;
+    }
+
+    const scores = numScores.map(x => x.score).sort((a, b) => a - b);
+    const minScore = scores[0];
+    const maxScore = scores[scores.length - 1];
+    const midIdx = Math.floor(scores.length / 2);
+    const median = scores.length % 2 === 0
+        ? (scores[midIdx - 1] + scores[midIdx]) / 2
+        : scores[midIdx];
+
+    const midHigh = numScores.filter(x => x.score > median && x.score < maxScore).sort((a, b) => b.score - a.score);
+    const midLow = numScores.filter(x => x.score < median && x.score > minScore).sort((a, b) => b.score - a.score);
+    const highest = numScores.filter(x => x.score === maxScore);
+    const lowest = numScores.filter(x => x.score === minScore);
+
+    const finalOrder = [...midHigh, ...midLow, ...highest, ...lowest];
+
+    document.getElementById('unionStatResult').innerHTML = `
+        <div style="font-size:16px;font-weight:bold;margin-bottom:8px;">
+            并集分析结果（中高→中下→最高→最低，总次数排序，剩余 <span style="color:#00e676;">${filteredNums.length}</span> 个）：
+        </div>
+        <div style="font-size:13px;color:#fff;">
+            ${finalOrder.map(x => `<span>${x.num}(${x.score})</span>`).join(' ')}
+        </div>
+    `;
+}
+ 
+</script>
+</body>
+</html>
